@@ -675,16 +675,42 @@
                 return () => window.removeEventListener('keydown', handleKeyDown);
             }, []);
 
-            // Download handler
+            // Google Drive folder mapping based on Assets folder structure
+            const GDRIVE_BASE = 'https://drive.google.com/drive/folders/';
+            const GDRIVE_FOLDER_IDS = {
+                '00. Company Profile': '1ED8mMfEQHKM0wlOZBD9adW4F-8KJk96m', // Main Assets folder - user will navigate
+                '01. Geogrid': '1ED8mMfEQHKM0wlOZBD9adW4F-8KJk96m',
+                '02. Geomembrane': '1ED8mMfEQHKM0wlOZBD9adW4F-8KJk96m',
+                '03. Geotextile': '1ED8mMfEQHKM0wlOZBD9adW4F-8KJk96m',
+                '04. Retaining Wall': '1ED8mMfEQHKM0wlOZBD9adW4F-8KJk96m',
+                '08. VMAX': '1ED8mMfEQHKM0wlOZBD9adW4F-8KJk96m',
+                '09. Presentasi': '1ED8mMfEQHKM0wlOZBD9adW4F-8KJk96m',
+                '10. Geocell': '1ED8mMfEQHKM0wlOZBD9adW4F-8KJk96m',
+                '11. HX-AE Asphalt Reinforcement': '1ED8mMfEQHKM0wlOZBD9adW4F-8KJk96m'
+            };
+
+            // Download handler - works for local and web
             const handleDownload = (file) => {
-                // For local development, we can directly link to the file
-                const link = document.createElement('a');
-                link.href = file.path;
-                link.download = file.name;
-                link.target = '_blank';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+                const isLocal = window.location.protocol === 'file:';
+
+                if (isLocal) {
+                    // Local: direct file download
+                    const link = document.createElement('a');
+                    link.href = file.path;
+                    link.download = file.name;
+                    link.target = '_blank';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                } else {
+                    // Web (Vercel): open Google Drive with the file name for search
+                    const gdriveUrl = GDRIVE_BASE + '1ED8mMfEQHKM0wlOZBD9adW4F-8KJk96m?usp=sharing';
+                    // Show info about which file to download
+                    const searchHint = encodeURIComponent(file.name.replace(/\.[^/.]+$/, '')); // Remove extension
+                    window.open(gdriveUrl, '_blank');
+                    // Show toast notification
+                    alert(`📁 Cari file: "${file.name}"\n\nFolder Google Drive sudah dibuka. Silakan cari file tersebut di dalam folder.`);
+                }
             };
 
             // Category counts

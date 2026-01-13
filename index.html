@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multibangun Smart Database - Geosintetik Solutions</title>
+    <meta name="description"
+        content="Database produk geosintetik PT. Multibangun Rekatama Patria - Distributor resmi Tensar International">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#fef2f2',
+                            100: '#fee2e2',
+                            200: '#fecaca',
+                            300: '#fca5a5',
+                            400: '#f87171',
+                            500: '#ef4444',
+                            600: '#b91c1c',
+                            700: '#991b1b',
+                            800: '#7f1d1d',
+                            900: '#450a0a',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.3s ease-out',
+                        'slide-up': 'slideUp 0.4s ease-out',
+                        'pulse-slow': 'pulse 3s infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- React -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        /* Gradient text */
+        .gradient-text {
+            background: linear-gradient(135deg, #b91c1c 0%, #dc2626 50%, #f87171 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Spotlight glow */
+        .spotlight-glow {
+            box-shadow: 0 0 0 1px rgba(185, 28, 28, 0.1),
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06),
+                0 20px 40px -10px rgba(185, 28, 28, 0.15);
+        }
+
+        .spotlight-glow:focus-within {
+            box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.2),
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06),
+                0 25px 50px -12px rgba(185, 28, 28, 0.25);
+        }
+
+        /* Card hover effect */
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.15);
+        }
+
+        /* File type badge colors */
+        .badge-brosur {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-spesifikasi {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-metode {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-hasil-uji {
+            background: #f3e8ff;
+            color: #6b21a8;
+        }
+
+        .badge-sertifikasi {
+            background: #fce7f3;
+            color: #9d174d;
+        }
+
+        .badge-case-history {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .badge-presentasi {
+            background: #ffedd5;
+            color: #c2410c;
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-to-br from-slate-50 via-white to-slate-100 min-h-screen">
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useMemo } = React;
+
+        // ==================== ICONS ====================
+        const Icons = {
+            Search: ({ className = "w-6 h-6" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+            ),
+            Download: ({ className = "w-4 h-4" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+            ),
+            X: ({ className = "w-5 h-5" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            ),
+            Star: ({ className = "w-4 h-4" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+            ),
+            FileText: ({ className = "w-4 h-4" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <line x1="16" y1="13" x2="8" y2="13" />
+                    <line x1="16" y1="17" x2="8" y2="17" />
+                    <polyline points="10 9 9 9 8 9" />
+                </svg>
+            ),
+            Phone: ({ className = "w-5 h-5" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+                </svg>
+            ),
+            Folder: ({ className = "w-4 h-4" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                </svg>
+            ),
+            ChevronRight: ({ className = "w-4 h-4" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="9 18 15 12 9 6" />
+                </svg>
+            ),
+            Command: ({ className = "w-3 h-3" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z" />
+                </svg>
+            ),
+            ExternalLink: ({ className = "w-3 h-3" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" y1="14" x2="21" y2="3" />
+                </svg>
+            )
+        };
+
+        // ==================== FILE TYPE CONFIG ====================
+        const fileTypeConfig = {
+            'brosur': { label: 'Brosur', badge: 'badge-brosur', icon: '📄' },
+            'spesifikasi': { label: 'Spesifikasi', badge: 'badge-spesifikasi', icon: '📋' },
+            'metode': { label: 'Metode', badge: 'badge-metode', icon: '🔧' },
+            'hasil-uji': { label: 'Hasil Uji', badge: 'badge-hasil-uji', icon: '🧪' },
+            'sertifikasi': { label: 'Sertifikasi', badge: 'badge-sertifikasi', icon: '✅' },
+            'case-history': { label: 'Case History', badge: 'badge-case-history', icon: '📚' },
+            'presentasi': { label: 'Presentasi', badge: 'badge-presentasi', icon: '📊' },
+        };
+
+        // ==================== CATEGORY CONFIG ====================
+        const categoryConfig = {
+            'company-profile': { label: 'Company Profile', color: 'bg-slate-600' },
+            'geogrid': { label: 'Geogrid', color: 'bg-blue-600' },
+            'geomembrane': { label: 'Geomembrane', color: 'bg-emerald-600' },
+            'geotextile': { label: 'Geotextile', color: 'bg-purple-600' },
+            'retaining-wall': { label: 'Retaining Wall', color: 'bg-amber-600' },
+            'erosion-control': { label: 'Kontrol Erosi', color: 'bg-green-600' },
+            'presentasi': { label: 'Presentasi', color: 'bg-orange-600' },
+            'geocell': { label: 'Geocell', color: 'bg-cyan-600' },
+            'asphalt': { label: 'Asphalt', color: 'bg-rose-600' },
+        };
+
+        // ==================== COMPONENTS ====================
+
+        // Category Filter Pill
+        const CategoryPill = ({ category, isActive, onClick, count }) => {
+            const config = categoryConfig[category.id] || { label: category.name, color: 'bg-gray-600' };
+            return (
+                <button
+                    onClick={onClick}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-2 ${isActive
+                        ? `${config.color} text-white shadow-lg`
+                        : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200 hover:border-slate-300'
+                        }`}
+                >
+                    {config.label}
+                    {count > 0 && (
+                        <span className={`text-xs px-1.5 py-0.5 rounded-full ${isActive ? 'bg-white/20' : 'bg-slate-100'}`}>
+                            {count}
+                        </span>
+                    )}
+                </button>
+            );
+        };
+
+        // File Download Button
+        const FileButton = ({ file, onDownload }) => {
+            const config = fileTypeConfig[file.type] || { label: file.type, badge: 'badge-brosur', icon: '📄' };
+            return (
+                <button
+                    onClick={() => onDownload(file)}
+                    className={`group flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${config.badge} hover:scale-105 hover:shadow-md`}
+                    title={file.name}
+                >
+                    <span>{config.icon}</span>
+                    <span className="hidden sm:inline">{config.label}</span>
+                    <Icons.Download className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </button>
+            );
+        };
+
+        // Product Card
+        const ProductCard = ({ item, onDownload }) => {
+            const catConfig = categoryConfig[item.category] || { label: item.category, color: 'bg-gray-600' };
+
+            // Group files by type
+            const filesByType = useMemo(() => {
+                const grouped = {};
+                item.files.forEach(file => {
+                    if (!grouped[file.type]) grouped[file.type] = [];
+                    grouped[file.type].push(file);
+                });
+                return grouped;
+            }, [item.files]);
+
+            return (
+                <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden card-hover animate-fade-in flex flex-col h-full">
+                    {/* Header */}
+                    <div className="p-5 pb-3 flex-1">
+                        <div className="flex items-start justify-between mb-3">
+                            <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full text-white uppercase tracking-wider ${catConfig.color}`}>
+                                {catConfig.label}
+                            </span>
+                            {item.highlight && (
+                                <span className="flex items-center gap-1 text-amber-500" title="Featured Product">
+                                    <Icons.Star className="w-4 h-4" />
+                                </span>
+                            )}
+                        </div>
+
+                        <h3 className="text-lg font-bold text-slate-800 mb-2 leading-tight group-hover:text-brand-600 transition-colors">
+                            {item.title}
+                        </h3>
+
+                        {item.subcategory && (
+                            <p className="text-xs text-slate-400 mb-2 flex items-center gap-1">
+                                <Icons.Folder className="w-3 h-3" />
+                                {item.subcategory}
+                            </p>
+                        )}
+
+                        <p className="text-slate-500 text-sm leading-relaxed mb-4 line-clamp-2">
+                            {item.description}
+                        </p>
+
+                        {/* Tags */}
+                        <div className="flex flex-wrap gap-1.5 mb-3">
+                            {item.tags.slice(0, 4).map((tag, idx) => (
+                                <span key={idx} className="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">
+                                    #{tag}
+                                </span>
+                            ))}
+                            {item.tags.length > 4 && (
+                                <span className="text-[10px] text-slate-400">+{item.tags.length - 4}</span>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Files Section */}
+                    <div className="bg-slate-50/50 p-4 border-t border-slate-100">
+                        <p className="text-[10px] uppercase tracking-wider text-slate-400 font-medium mb-2">
+                            {item.files.length} file tersedia
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                            {Object.entries(filesByType).map(([type, files]) => (
+                                files.length === 1 ? (
+                                    <FileButton key={type} file={files[0]} onDownload={onDownload} />
+                                ) : (
+                                    <div key={type} className="relative group">
+                                        <FileButton file={{ ...files[0], name: `${files.length} ${fileTypeConfig[type]?.label || type}` }} onDownload={() => { }} />
+                                        <div className="absolute bottom-full left-0 mb-2 hidden group-hover:block z-20">
+                                            <div className="bg-white rounded-lg shadow-xl border border-slate-200 p-2 min-w-[200px]">
+                                                {files.map((f, i) => (
+                                                    <button
+                                                        key={i}
+                                                        onClick={() => onDownload(f)}
+                                                        className="w-full text-left px-3 py-2 text-xs text-slate-600 hover:bg-slate-50 rounded flex items-center gap-2"
+                                                    >
+                                                        <Icons.FileText className="w-3 h-3 text-slate-400" />
+                                                        <span className="truncate">{f.name}</span>
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // Empty State
+        const EmptyState = ({ query }) => (
+            <div className="text-center py-20 animate-fade-in">
+                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-slate-100 to-slate-200 mb-6">
+                    <Icons.Search className="w-10 h-10 text-slate-400" />
+                </div>
+                <h3 className="text-xl font-bold text-slate-700 mb-3">
+                    Tidak ditemukan hasil untuk "{query}"
+                </h3>
+                <p className="text-slate-500 max-w-md mx-auto mb-8">
+                    Data mungkin belum tersedia di database. Tim engineering kami siap membantu Anda menemukan solusi.
+                </p>
+                <a
+                    href="https://wa.me/6281112345678"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-full font-semibold hover:from-green-600 hover:to-green-700 transition-all shadow-lg hover:shadow-green-200 hover:scale-105"
+                >
+                    <Icons.Phone className="w-5 h-5" />
+                    Hubungi Sales Engineer
+                </a>
+            </div>
+        );
+
+        // ==================== EMBEDDED DATABASE ====================
+        // Data embedded directly to avoid CORS issues when opening file locally
+        const EMBEDDED_DATABASE = {
+            "categories": [
+                { "id": "company-profile", "name": "Company Profile", "icon": "building" },
+                { "id": "geogrid", "name": "Geogrid", "icon": "grid" },
+                { "id": "geomembrane", "name": "Geomembrane", "icon": "layers" },
+                { "id": "geotextile", "name": "Geotextile", "icon": "fabric" },
+                { "id": "retaining-wall", "name": "Retaining Wall", "icon": "wall" },
+                { "id": "erosion-control", "name": "Kontrol Erosi", "icon": "shield" },
+                { "id": "presentasi", "name": "Presentasi", "icon": "presentation" },
+                { "id": "geocell", "name": "Geocell", "icon": "honeycomb" },
+                { "id": "asphalt", "name": "Asphalt Reinforcement", "icon": "road" }
+            ],
+            "items": [
+                {
+                    "id": 1,
+                    "title": "Company Profile Multibangun",
+                    "category": "company-profile",
+                    "subcategory": null,
+                    "tags": ["profil", "perusahaan", "multibangun", "corporate", "distributor", "tensar"],
+                    "description": "Profil lengkap PT. Multibangun Rekatama Patria, spesialis geosintetik dan distributor resmi Tensar International.",
+                    "highlight": true,
+                    "files": [{ "name": "COMPANY PROFILE MULTIBANGUN - IND_compr.pdf", "path": "Assets/00. Company Profile/COMPANY PROFILE MULTIBANGUN - IND_compr.pdf", "type": "brosur", "size": "3.3 MB" }]
+                },
+                {
+                    "id": 2,
+                    "title": "Tensar Geogrid General",
+                    "category": "geogrid",
+                    "subcategory": "General",
+                    "tags": ["geogrid", "tensar", "general", "overview", "basal", "reinforcement"],
+                    "description": "Brosur umum produk Tensar Geogrid termasuk aplikasi basal reinforcement untuk perkuatan tanah dasar.",
+                    "files": [
+                        { "name": "Brosur Tensar General.pdf", "path": "Assets/01. Geogrid/00. General/Brosur Tensar General.pdf", "type": "brosur", "size": "9 MB" },
+                        { "name": "Brosur Tensar Basal Reinforcement.pdf", "path": "Assets/01. Geogrid/00. General/Brosur Tensar Basal Reinforcement.pdf", "type": "brosur", "size": "2.2 MB" }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "title": "Tensar Geogrid Uniaxial RE Series",
+                    "category": "geogrid",
+                    "subcategory": "Uniaxial",
+                    "tags": ["uniaxial", "geogrid", "RE520", "RE540", "RE570", "RE580", "dinding penahan", "retaining wall"],
+                    "description": "Geogrid uniaxial untuk perkuatan dinding penahan tanah dan struktur MSE wall dengan kekuatan tarik tinggi.",
+                    "files": [
+                        { "name": "Spesifikasi RE540.pdf", "path": "Assets/01. Geogrid/01. Uniaxial/02. Spesifikasi/MS_RE540-120-30_2018.pdf", "type": "spesifikasi", "size": "0.5 MB" },
+                        { "name": "Spesifikasi RE570.pdf", "path": "Assets/01. Geogrid/01. Uniaxial/02. Spesifikasi/MS_RE570-120-30_2018.pdf", "type": "spesifikasi", "size": "0.5 MB" },
+                        { "name": "Spesifikasi RE580.pdf", "path": "Assets/01. Geogrid/01. Uniaxial/02. Spesifikasi/MS_RE580-120-30_2018.pdf", "type": "spesifikasi", "size": "0.5 MB" },
+                        { "name": "Technical Note RE500 Series.pdf", "path": "Assets/01. Geogrid/01. Uniaxial/02. Spesifikasi/Technical Note_RE500 Series spec30.pdf", "type": "spesifikasi", "size": "0.3 MB" },
+                        { "name": "Hasil Uji RE540-570-580.pdf", "path": "Assets/01. Geogrid/01. Uniaxial/03. Hasil Uji/Hasil Test Geogrid Uniaxial RE540-570-580.pdf", "type": "hasil-uji", "size": "1 MB" },
+                        { "name": "Sertifikasi BBA.pdf", "path": "Assets/01. Geogrid/01. Uniaxial/04. Sertifikasi/BBA_H202_TENSAR RE AND RE500 GEOGRIDS FOR REINFORCED SOIL EMBANKMENTS.pdf", "type": "sertifikasi", "size": "2 MB" }
+                    ]
+                },
+                {
+                    "id": 4,
+                    "title": "Tensar Geogrid Biaxial SS Series",
+                    "category": "geogrid",
+                    "subcategory": "Biaxial",
+                    "tags": ["biaxial", "geogrid", "SS20", "SS30", "SS40", "stabilisasi", "jalan"],
+                    "description": "Geogrid biaxial untuk stabilisasi tanah dasar dan perkuatan perkerasan jalan dengan bukaan persegi.",
+                    "files": [
+                        { "name": "Brosur Tensar Geogrid Biaxial SS.pdf", "path": "Assets/01. Geogrid/02. Biaxial/01. Brosur/Brosur Tensar Geogrid Biaxial SS.pdf", "type": "brosur", "size": "2 MB" },
+                        { "name": "Spesifikasi SS30.pdf", "path": "Assets/01. Geogrid/02. Biaxial/02. Spesifikasi/Model Specification_SS30.pdf", "type": "spesifikasi", "size": "0.5 MB" },
+                        { "name": "Metode Pemasangan Biaxial.pdf", "path": "Assets/01. Geogrid/02. Biaxial/04. Metode Pemasangan/Installation Gudeline Biaxial Geogrid.pdf", "type": "metode", "size": "1 MB" }
+                    ]
+                },
+                {
+                    "id": 5,
+                    "title": "Tensar TriAx Geogrid",
+                    "category": "geogrid",
+                    "subcategory": "Triaxial",
+                    "tags": ["triax", "triaxial", "geogrid", "TX130", "TX150", "TX160", "TX170", "segitiga", "stabilisasi", "jalan", "pertambangan", "mining"],
+                    "description": "Geogrid dengan bukaan segitiga revolusioner untuk stabilisasi tanah dasar dengan efisiensi tinggi, mengurangi ketebalan agregat.",
+                    "highlight": true,
+                    "files": [
+                        { "name": "Brosur Tensar Geogrid TRIAX.pdf", "path": "Assets/01. Geogrid/03. Triaxial/01. Brosur/Brosur Tensar Geogrid TRIAX.pdf", "type": "brosur", "size": "2.3 MB" },
+                        { "name": "Brosur Stabilisasi Tanah Dasar.pdf", "path": "Assets/01. Geogrid/03. Triaxial/01. Brosur/Brosur Tensar Stabilisasi Tanah Dasar.pdf", "type": "brosur", "size": "2.7 MB" },
+                        { "name": "Brosur Untuk Pertambangan.pdf", "path": "Assets/01. Geogrid/03. Triaxial/01. Brosur/Brosur Tensar Untuk Pertambangan.pdf", "type": "brosur", "size": "1.2 MB" },
+                        { "name": "Technical Note TX130S.pdf", "path": "Assets/01. Geogrid/03. Triaxial/02. Spesifikasi/Technical Note Tensar TRIAX TX130S.pdf", "type": "spesifikasi", "size": "0.3 MB" },
+                        { "name": "Metode Pemasangan TriAx.pdf", "path": "Assets/01. Geogrid/03. Triaxial/03. Metode Pemasangan/Installation Guide line TriAx - New.pdf", "type": "metode", "size": "1 MB" }
+                    ]
+                },
+                {
+                    "id": 6,
+                    "title": "Case History TriAx Geogrid",
+                    "category": "geogrid",
+                    "subcategory": "Triaxial",
+                    "tags": ["case history", "proyek", "referensi", "triax", "jalan", "perkebunan", "sawit", "pertamina"],
+                    "description": "Kumpulan studi kasus dan referensi proyek penggunaan TriAx Geogrid di berbagai aplikasi di Indonesia.",
+                    "files": [
+                        { "name": "Case History Pengeboran Minyak Kuala Tungkal.pdf", "path": "Assets/01. Geogrid/03. Triaxial/07. Case History/Case History Jalan Akses Pengeboran Minyak Kuala Tungkal.pdf", "type": "case-history", "size": "2 MB" },
+                        { "name": "Case History Pengeboran Minyak Pertamina.pdf", "path": "Assets/01. Geogrid/03. Triaxial/07. Case History/Case History Jalan Akses Pengeboran Minyak Pertamina.pdf", "type": "case-history", "size": "2 MB" },
+                        { "name": "Case History Perkebunan Kelapa Sawit.pdf", "path": "Assets/01. Geogrid/03. Triaxial/07. Case History/Case History Jalan Akses Perkebunan Kelapa Sawit Banjarmasin.pdf", "type": "case-history", "size": "2 MB" }
+                    ]
+                },
+                {
+                    "id": 7,
+                    "title": "Tensar InterAx Geogrid (NX Series)",
+                    "category": "geogrid",
+                    "subcategory": "InterAx",
+                    "tags": ["interax", "NX", "HX", "geogrid", "terbaru", "next generation", "mining", "heavy duty"],
+                    "description": "Teknologi geogrid generasi terbaru dari Tensar dengan performa lebih tinggi untuk beban berat dan area pertambangan.",
+                    "highlight": true,
+                    "files": [
+                        { "name": "Tensar InterAx Flyer.pdf", "path": "Assets/01. Geogrid/04. InterAx/01. Brosur/Tensar Anatomy w TensarPlus Flyer - MRP - EN.pdf", "type": "brosur", "size": "10.7 MB" },
+                        { "name": "Tensar H Series Flyer.pdf", "path": "Assets/01. Geogrid/04. InterAx/01. Brosur/HX Series/Tensar HSeries Flyer - EN - MRP.pdf", "type": "brosur", "size": "1 MB" }
+                    ]
+                },
+                {
+                    "id": 8,
+                    "title": "Huitex HDPE Geomembrane",
+                    "category": "geomembrane",
+                    "subcategory": null,
+                    "tags": ["geomembrane", "HDPE", "huitex", "lining", "kolam", "limbah", "tambak", "landfill", "kedap air"],
+                    "description": "Lapisan kedap air (impermeable liner) untuk kolam limbah, penampungan air, tambak, dan aplikasi landfill.",
+                    "files": [
+                        { "name": "Brosur Geomembrane Huitex.pdf", "path": "Assets/02. Geomembrane/01. Brosur/Brosur Geomembrane Huitex.pdf", "type": "brosur", "size": "0.4 MB" },
+                        { "name": "Brosur Geomembrane Huitex Complete.pdf", "path": "Assets/02. Geomembrane/01. Brosur/Brosur Geomembrane Huitex-Complete.pdf", "type": "brosur", "size": "10.8 MB" },
+                        { "name": "Spesifikasi HDPE Smooth.pdf", "path": "Assets/02. Geomembrane/02. Spesifikasi/Huitex HDPE Geomembrane Smooth Specification.pdf", "type": "spesifikasi", "size": "0.04 MB" },
+                        { "name": "Metode Pemasangan Geomembrane.pdf", "path": "Assets/02. Geomembrane/08. Metode Pemasangan/Geomembrane Installation Reference Manual.pdf", "type": "metode", "size": "0.9 MB" }
+                    ]
+                },
+                {
+                    "id": 9,
+                    "title": "Geotextile Non-Woven",
+                    "category": "geotextile",
+                    "subcategory": null,
+                    "tags": ["geotextile", "non woven", "PET", "PP", "separator", "filter", "kain", "penyaring"],
+                    "description": "Material pemisah dan penyaring (separator & filtration) berbahan polyester (PET) atau polypropylene (PP).",
+                    "files": [
+                        { "name": "Datasheet Geotextile Non Woven PET.pdf", "path": "Assets/03. Geotextile/02. Spesifikasi/Datasheet Geotextile Non Woven PET.pdf", "type": "spesifikasi", "size": "0.4 MB" },
+                        { "name": "Datasheet Geotextile Non Woven PP.pdf", "path": "Assets/03. Geotextile/02. Spesifikasi/Datasheet Geotextile Non Woven PP.pdf", "type": "spesifikasi", "size": "0.2 MB" }
+                    ]
+                },
+                {
+                    "id": 10,
+                    "title": "Multiblock Retaining Wall System",
+                    "category": "retaining-wall",
+                    "subcategory": "Multiblock",
+                    "tags": ["multiblock", "MBS", "dinding penahan", "retaining wall", "beton", "modular", "blok"],
+                    "description": "Sistem dinding penahan tanah menggunakan modular blok beton dan perkuatan Geogrid Uniaxial RE Series.",
+                    "highlight": true,
+                    "files": [
+                        { "name": "Brosur Multiblock Retaining Wall.pdf", "path": "Assets/04. Retaining Wall/01. Multiblock Retaining Wall System/01. Brosur/Brosur Tensar untuk Multiblock Retaining Wall System.pdf", "type": "brosur", "size": "2.3 MB" },
+                        { "name": "Presentasi Multiblock (PDF).pdf", "path": "Assets/09. Presentasi/PDF/MULTIBLOCK RETAINING WALL SYSTEM.pdf", "type": "presentasi", "size": "6.9 MB" }
+                    ]
+                },
+                {
+                    "id": 11,
+                    "title": "SierraScape Retaining Wall System",
+                    "category": "retaining-wall",
+                    "subcategory": "SierraScape",
+                    "tags": ["sierrascape", "sierra", "wire", "kawat", "mesh", "vegetasi", "hijau", "green wall", "lereng"],
+                    "description": "Sistem dinding penahan tanah kawat (wire mesh) yang bisa ditanami vegetasi atau diisi batu pecah.",
+                    "files": [
+                        { "name": "Brosur SierraScape.pdf", "path": "Assets/04. Retaining Wall/02. Sierrascape Retaining Wall System/01. Brosur/Sierra Scape Retaining Wall System Brosur.pdf", "type": "brosur", "size": "7.2 MB" },
+                        { "name": "Presentasi SierraScape (PDF).pdf", "path": "Assets/09. Presentasi/PDF/PPT SIERRASCAPE RETANING WALL SYSTEM - MULTIBANGUN.pdf", "type": "presentasi", "size": "4.3 MB" }
+                    ]
+                },
+                {
+                    "id": 12,
+                    "title": "V-Max Erosion Control",
+                    "category": "erosion-control",
+                    "subcategory": null,
+                    "tags": ["vmax", "V-Max", "erosi", "erosion", "control", "TRM", "mat", "sungai", "lereng", "saluran"],
+                    "description": "Solusi turf reinforcement mat untuk mencegah erosi pada lereng timbunan, galian, dan saluran air.",
+                    "files": [
+                        { "name": "Brosur Tensar V-Max.pdf", "path": "Assets/08. VMAX/Brosur Tensar untuk Kontrol Erosi V-Max.pdf", "type": "brosur", "size": "2 MB" },
+                        { "name": "Pedoman Instalasi V-Max C350.pdf", "path": "Assets/08. VMAX/08. Metode Pemasangan/Pedoman Instalasi Tensar Vmax C350.pdf", "type": "metode", "size": "0.6 MB" }
+                    ]
+                },
+                {
+                    "id": 13,
+                    "title": "Huitex Geocell",
+                    "category": "geocell",
+                    "subcategory": null,
+                    "tags": ["geocell", "huitex", "honeycomb", "sarang lebah", "slope", "retaining wall", "stabilisasi"],
+                    "description": "Sistem geocell berbentuk sarang lebah untuk stabilisasi lereng, ground stabilization, dan dinding penahan.",
+                    "files": [
+                        { "name": "Brosur Geocell.pdf", "path": "Assets/10. Geocell/Brosur Geocell/Geocell Brochure.pdf", "type": "brosur", "size": "2.9 MB" },
+                        { "name": "Spesifikasi Geocell.pdf", "path": "Assets/10. Geocell/Brosur Geocell/Spesification Geocell_type.pdf", "type": "spesifikasi", "size": "0.1 MB" },
+                        { "name": "Instalasi Geocell - Ground Stabilization.pdf", "path": "Assets/10. Geocell/Brosur Geocell/HUITEX Geocell installation Reference for Ground Stabiliz..pdf", "type": "metode", "size": "0.3 MB" }
+                    ]
+                },
+                {
+                    "id": 14,
+                    "title": "HX-AE Asphalt Reinforcement",
+                    "category": "asphalt",
+                    "subcategory": null,
+                    "tags": ["HX-AE", "asphalt", "aspal", "reinforcement", "overlay", "jalan", "retak", "crack"],
+                    "description": "Geogrid untuk perkuatan lapisan aspal dan mencegah reflective cracking pada jalan overlay.",
+                    "files": [
+                        { "name": "Brosur HX-AE Asphalt.pdf", "path": "Assets/11. HX-AE Asphalt Reinforcement/HX-AE -Asphalt-Flyer.pdf", "type": "brosur", "size": "5.8 MB" },
+                        { "name": "Technical Note HX-AE.pdf", "path": "Assets/11. HX-AE Asphalt Reinforcement/TN_HX-AE.pdf", "type": "spesifikasi", "size": "0.09 MB" }
+                    ]
+                },
+                {
+                    "id": 15,
+                    "title": "Presentasi Geosintetik Konstruksi",
+                    "category": "presentasi",
+                    "subcategory": null,
+                    "tags": ["presentasi", "konstruksi", "aplikasi", "overview", "geosintetik"],
+                    "description": "Presentasi komprehensif tentang aplikasi geosintetik pada berbagai proyek konstruksi.",
+                    "files": [{ "name": "Aplikasi Geosintetik pada Proyek Konstruksi.pdf", "path": "Assets/09. Presentasi/PDF/APLIKASI GEOSINTETIK PADA PROYEK KONSTRUKSI.pdf", "type": "presentasi", "size": "8.7 MB" }]
+                },
+                {
+                    "id": 16,
+                    "title": "Presentasi Stabilisasi Tanah Dasar",
+                    "category": "presentasi",
+                    "subcategory": null,
+                    "tags": ["presentasi", "stabilisasi", "tanah dasar", "geogrid", "jalan"],
+                    "description": "Presentasi lengkap mengenai teknik stabilisasi tanah dasar menggunakan geogrid.",
+                    "files": [{ "name": "Stabilisasi Tanah Dasar Menggunakan Geogrid.pdf", "path": "Assets/09. Presentasi/PDF/PRESENTASI STABILISASI TANAH DASAR MENGGUNAKAN GEOGRID.pdf", "type": "presentasi", "size": "10.1 MB" }]
+                },
+                {
+                    "id": 17,
+                    "title": "Presentasi HDPE Geomembrane",
+                    "category": "presentasi",
+                    "subcategory": null,
+                    "tags": ["presentasi", "geomembrane", "HDPE", "lining", "kolam"],
+                    "description": "Presentasi detail tentang aplikasi dan instalasi HDPE Geomembrane.",
+                    "files": [{ "name": "Presentasi HDPE Geomembrane.pdf", "path": "Assets/09. Presentasi/PDF/PRESENTASI HDPE GEOMEMBRANE.pdf", "type": "presentasi", "size": "3.9 MB" }]
+                },
+                {
+                    "id": 18,
+                    "title": "Solusi Kawasan Industri",
+                    "category": "presentasi",
+                    "subcategory": null,
+                    "tags": ["industri", "pabrik", "gudang", "kawasan", "industrial", "estate"],
+                    "description": "Presentasi solusi geosintetik untuk pengembangan kawasan industri dan pergudangan.",
+                    "files": [{ "name": "Solusi Geosintetik Kawasan Industri.pdf", "path": "Assets/09. Presentasi/PDF/Presentasi Solusi Geosintetik Kawasan Industri.pdf", "type": "presentasi", "size": "2.4 MB" }]
+                },
+                {
+                    "id": 19,
+                    "title": "Aplikasi Pertambangan",
+                    "category": "presentasi",
+                    "subcategory": null,
+                    "tags": ["tambang", "mining", "hauling", "road", "batu bara", "coal", "pertambangan"],
+                    "description": "Presentasi penerapan teknologi geosintetik untuk efisiensi infrastruktur pertambangan.",
+                    "files": [{ "name": "Aplikasi Geosintetik untuk Area Pertambangan.pdf", "path": "Assets/09. Presentasi/PDF/TN_APLIKASI GEOSINTETIK UNTUK AREA PERTAMBANGAN.pdf", "type": "presentasi", "size": "44.9 MB" }]
+                }
+            ]
+        };
+
+        // ==================== MAIN APP ====================
+        const MultibangunSmartDatabase = () => {
+            const [database, setDatabase] = useState(EMBEDDED_DATABASE);
+            const [query, setQuery] = useState('');
+            const [activeCategory, setActiveCategory] = useState('all');
+            const [results, setResults] = useState(EMBEDDED_DATABASE.items);
+            const [isScrolled, setIsScrolled] = useState(false);
+            const searchInputRef = useRef(null);
+
+            // Search & Filter
+            useEffect(() => {
+                let filtered = database.items;
+
+                if (query) {
+                    const lowerQuery = query.toLowerCase();
+                    filtered = filtered.filter(item =>
+                        item.title.toLowerCase().includes(lowerQuery) ||
+                        item.description.toLowerCase().includes(lowerQuery) ||
+                        item.tags.some(tag => tag.toLowerCase().includes(lowerQuery)) ||
+                        (item.subcategory && item.subcategory.toLowerCase().includes(lowerQuery)) ||
+                        item.files.some(f => f.name.toLowerCase().includes(lowerQuery))
+                    );
+                }
+
+                if (activeCategory !== 'all') {
+                    filtered = filtered.filter(item => item.category === activeCategory);
+                }
+
+                setResults(filtered);
+            }, [query, activeCategory, database.items]);
+
+            // Scroll effect
+            useEffect(() => {
+                const handleScroll = () => setIsScrolled(window.scrollY > 20);
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            // Keyboard shortcut
+            useEffect(() => {
+                const handleKeyDown = (e) => {
+                    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                        e.preventDefault();
+                        searchInputRef.current?.focus();
+                    }
+                    if (e.key === 'Escape') {
+                        setQuery('');
+                        searchInputRef.current?.blur();
+                    }
+                };
+                window.addEventListener('keydown', handleKeyDown);
+                return () => window.removeEventListener('keydown', handleKeyDown);
+            }, []);
+
+            // Download handler
+            const handleDownload = (file) => {
+                // For local development, we can directly link to the file
+                const link = document.createElement('a');
+                link.href = file.path;
+                link.download = file.name;
+                link.target = '_blank';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            };
+
+            // Category counts
+            const categoryCounts = useMemo(() => {
+                const counts = { all: database.items.length };
+                database.items.forEach(item => {
+                    counts[item.category] = (counts[item.category] || 0) + 1;
+                });
+                return counts;
+            }, [database.items]);
+
+            return (
+                <div className="min-h-screen">
+
+                    {/* HEADER */}
+                    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'glass shadow-sm py-3' : 'bg-transparent py-5'
+                        }`}>
+                        <div className="max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <div className="w-11 h-11 bg-gradient-to-br from-brand-600 to-brand-700 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-brand-200">
+                                    M
+                                </div>
+                                <div>
+                                    <h1 className="text-xl font-black tracking-tight text-slate-900 leading-none">MULTIBANGUN</h1>
+                                    <span className="text-[10px] font-semibold text-slate-400 tracking-widest uppercase">Smart Database</span>
+                                </div>
+                            </div>
+
+                            <nav className="hidden md:flex items-center gap-2">
+                                <a href="#" className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors rounded-lg hover:bg-slate-100">
+                                    Produk
+                                </a>
+                                <a href="#" className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors rounded-lg hover:bg-slate-100">
+                                    Proyek
+                                </a>
+                                <a
+                                    href="https://wa.me/6281112345678"
+                                    target="_blank"
+                                    className="ml-2 px-5 py-2.5 bg-gradient-to-r from-slate-800 to-slate-900 text-white rounded-xl text-sm font-semibold hover:from-slate-900 hover:to-black transition-all shadow-lg hover:shadow-xl"
+                                >
+                                    Hubungi Kami
+                                </a>
+                            </nav>
+                        </div>
+                    </header>
+
+                    {/* HERO / SPOTLIGHT */}
+                    <div className="pt-32 pb-10 px-4 md:px-8">
+                        <div className="max-w-4xl mx-auto text-center mb-10">
+                            <h2 className="text-4xl md:text-6xl font-black text-slate-900 mb-5 tracking-tight leading-tight">
+                                Temukan <span className="gradient-text">Solusi</span> Geosintetik
+                            </h2>
+                            <p className="text-slate-500 text-lg md:text-xl max-w-2xl mx-auto">
+                                Akses brosur, spesifikasi teknis, dan dokumentasi produk dalam hitungan detik
+                            </p>
+                        </div>
+
+                        {/* Spotlight Search */}
+                        <div className="max-w-3xl mx-auto relative">
+                            <div className="relative spotlight-glow rounded-2xl bg-white transition-all duration-300">
+                                <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
+                                    <Icons.Search className={`w-6 h-6 transition-colors ${query ? 'text-brand-600' : 'text-slate-400'}`} />
+                                </div>
+                                <input
+                                    ref={searchInputRef}
+                                    type="text"
+                                    value={query}
+                                    onChange={(e) => setQuery(e.target.value)}
+                                    placeholder="Cari produk, brosur, atau spesifikasi..."
+                                    className="w-full pl-16 pr-32 py-5 bg-transparent rounded-2xl text-lg text-slate-800 placeholder:text-slate-400 focus:outline-none"
+                                    autoComplete="off"
+                                />
+                                <div className="absolute inset-y-0 right-4 flex items-center gap-2">
+                                    {query && (
+                                        <button
+                                            onClick={() => setQuery('')}
+                                            className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                                        >
+                                            <Icons.X className="w-5 h-5" />
+                                        </button>
+                                    )}
+                                    <kbd className="hidden md:flex items-center gap-1 px-2 py-1.5 bg-slate-100 text-slate-400 rounded-lg text-xs font-medium">
+                                        <Icons.Command className="w-3 h-3" /> K
+                                    </kbd>
+                                </div>
+                            </div>
+
+                            {/* Quick Stats */}
+                            <div className="mt-4 flex items-center justify-center gap-6 text-sm text-slate-400">
+                                <span>{database.items.length} produk</span>
+                                <span>•</span>
+                                <span>{database.items.reduce((acc, item) => acc + item.files.length, 0)} file</span>
+                                <span>•</span>
+                                <span>{database.categories.length} kategori</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* CONTENT */}
+                    <main className="max-w-7xl mx-auto px-4 md:px-8 pb-24">
+
+                        {/* Category Filters */}
+                        <div className="flex flex-wrap items-center justify-center gap-2 mb-10">
+                            <button
+                                onClick={() => setActiveCategory('all')}
+                                className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${activeCategory === 'all'
+                                    ? 'bg-gradient-to-r from-slate-800 to-slate-900 text-white shadow-lg'
+                                    : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
+                                    }`}
+                            >
+                                Semua
+                                <span className={`ml-2 text-xs px-1.5 py-0.5 rounded-full ${activeCategory === 'all' ? 'bg-white/20' : 'bg-slate-100'}`}>
+                                    {categoryCounts.all}
+                                </span>
+                            </button>
+                            {database.categories.map((cat) => (
+                                <CategoryPill
+                                    key={cat.id}
+                                    category={cat}
+                                    isActive={activeCategory === cat.id}
+                                    onClick={() => setActiveCategory(cat.id)}
+                                    count={categoryCounts[cat.id] || 0}
+                                />
+                            ))}
+                        </div>
+
+                        {/* Results */}
+                        {results.length > 0 ? (
+                            <>
+                                <p className="text-sm text-slate-400 mb-6">
+                                    Menampilkan {results.length} hasil {query && `untuk "${query}"`}
+                                </p>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    {results.map((item) => (
+                                        <ProductCard key={item.id} item={item} onDownload={handleDownload} />
+                                    ))}
+                                </div>
+                            </>
+                        ) : (
+                            <EmptyState query={query} />
+                        )}
+                    </main>
+
+                    {/* FOOTER */}
+                    <footer className="bg-white border-t border-slate-100 py-16">
+                        <div className="max-w-7xl mx-auto px-4 md:px-8">
+                            <div className="grid md:grid-cols-4 gap-12">
+                                <div className="md:col-span-2">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <div className="w-10 h-10 bg-gradient-to-br from-brand-600 to-brand-700 rounded-xl flex items-center justify-center text-white font-bold shadow-lg">
+                                            M
+                                        </div>
+                                        <div>
+                                            <h4 className="font-bold text-slate-900">MULTIBANGUN</h4>
+                                            <span className="text-xs text-slate-400">Rekatama Patria</span>
+                                        </div>
+                                    </div>
+                                    <p className="text-slate-500 text-sm leading-relaxed max-w-sm">
+                                        Spesialis solusi geosintetik dan distributor resmi Tensar International untuk Indonesia.
+                                        Melayani proyek infrastruktur sejak 1995.
+                                    </p>
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-slate-900 mb-4">Akses Cepat</h4>
+                                    <ul className="space-y-3 text-sm text-slate-500">
+                                        <li><a href="#" className="hover:text-brand-600 transition-colors flex items-center gap-1">Company Profile <Icons.ExternalLink /></a></li>
+                                        <li><a href="#" className="hover:text-brand-600 transition-colors">Produk Tensar</a></li>
+                                        <li><a href="#" className="hover:text-brand-600 transition-colors">Referensi Proyek</a></li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-slate-900 mb-4">Bantuan Teknis</h4>
+                                    <p className="text-sm text-slate-500 mb-4">
+                                        Butuh analisa desain atau konsultasi teknis?
+                                    </p>
+                                    <a
+                                        href="https://wa.me/6281112345678"
+                                        target="_blank"
+                                        className="inline-flex items-center gap-2 text-sm font-semibold text-brand-600 hover:text-brand-700 transition-colors"
+                                    >
+                                        Hubungi Engineering <Icons.ChevronRight />
+                                    </a>
+                                </div>
+                            </div>
+                            <div className="mt-16 pt-8 border-t border-slate-100 text-center text-xs text-slate-400">
+                                © 2024 PT. Multibangun Rekatama Patria. Smart Database System.
+                            </div>
+                        </div>
+                    </footer>
+
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<MultibangunSmartDatabase />);
+    </script>
+</body>
+
+</html>

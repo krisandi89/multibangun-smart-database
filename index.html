@@ -675,18 +675,18 @@
                 return () => window.removeEventListener('keydown', handleKeyDown);
             }, []);
 
-            // Google Drive folder mapping based on Assets folder structure
+            // Google Drive folder mapping - ACTUAL FOLDER IDs
             const GDRIVE_BASE = 'https://drive.google.com/drive/folders/';
             const GDRIVE_FOLDER_IDS = {
-                '00. Company Profile': '1ED8mMfEQHKM0wlOZBD9adW4F-8KJk96m', // Main Assets folder - user will navigate
-                '01. Geogrid': '1ED8mMfEQHKM0wlOZBD9adW4F-8KJk96m',
-                '02. Geomembrane': '1ED8mMfEQHKM0wlOZBD9adW4F-8KJk96m',
-                '03. Geotextile': '1ED8mMfEQHKM0wlOZBD9adW4F-8KJk96m',
-                '04. Retaining Wall': '1ED8mMfEQHKM0wlOZBD9adW4F-8KJk96m',
-                '08. VMAX': '1ED8mMfEQHKM0wlOZBD9adW4F-8KJk96m',
-                '09. Presentasi': '1ED8mMfEQHKM0wlOZBD9adW4F-8KJk96m',
-                '10. Geocell': '1ED8mMfEQHKM0wlOZBD9adW4F-8KJk96m',
-                '11. HX-AE Asphalt Reinforcement': '1ED8mMfEQHKM0wlOZBD9adW4F-8KJk96m'
+                '00. Company Profile': '1jng_bAuIr87_X22_DYFJsRHqGiC5p_pG',
+                '01. Geogrid': '1Oo17DCTZq9JBc8zxPI7bWdHV2V74cVFN',
+                '02. Geomembrane': '1lDdmwjImQm6IBi7N2xZ5V9pavVBYsAeB',
+                '03. Geotextile': '1wRDdrGtOhEFZFtPeOcLWNqAiU-C0Y9BV',
+                '04. Retaining Wall': '12Ngvas-z0zJu9OXjLwFGjhmdxxIAQKSL',
+                '08. VMAX': '16oZdk57eXpbDKn7fmoS3Xotccp4p6H_s',
+                '09. Presentasi': '1_79AQfTh0hBr-zvyj4WBXUs8SB1bfsNi',
+                '10. Geocell': '1Xep1NGbF69g2NxxURoaHSHjxVZ9EL7XR',
+                '11. HX-AE Asphalt Reinforcement': '1RZSLnkdBnri3ypSuWICG-CXuPpnzTsCu'
             };
 
             // Download handler - works for local and web
@@ -703,13 +703,18 @@
                     link.click();
                     document.body.removeChild(link);
                 } else {
-                    // Web (Vercel): open Google Drive with the file name for search
-                    const gdriveUrl = GDRIVE_BASE + '1ED8mMfEQHKM0wlOZBD9adW4F-8KJk96m?usp=sharing';
-                    // Show info about which file to download
-                    const searchHint = encodeURIComponent(file.name.replace(/\.[^/.]+$/, '')); // Remove extension
+                    // Web (Vercel): open correct Google Drive subfolder
+                    // Parse the file path to find the main folder
+                    // Example path: "Assets/01. Geogrid/00. General/Brosur Tensar General.pdf"
+                    const pathParts = file.path.split('/');
+                    const mainFolder = pathParts[1]; // e.g., "01. Geogrid"
+
+                    // Get the folder ID, fallback to main Assets folder
+                    const folderId = GDRIVE_FOLDER_IDS[mainFolder] || '1ED8mMfEQHKM0wlOZBD9adW4F-8KJk96m';
+                    const gdriveUrl = GDRIVE_BASE + folderId + '?usp=sharing';
+
+                    // Open in new tab
                     window.open(gdriveUrl, '_blank');
-                    // Show toast notification
-                    alert(`📁 Cari file: "${file.name}"\n\nFolder Google Drive sudah dibuka. Silakan cari file tersebut di dalam folder.`);
                 }
             };
 

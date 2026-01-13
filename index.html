@@ -328,16 +328,18 @@
                                 ) : (
                                     <div key={type} className="relative group">
                                         <FileButton file={{ ...files[0], name: `${files.length} ${fileTypeConfig[type]?.label || type}` }} onDownload={() => { }} />
-                                        <div className="absolute bottom-full left-0 mb-2 hidden group-hover:block z-20">
-                                            <div className="bg-white rounded-lg shadow-xl border border-slate-200 p-2 min-w-[200px]">
+                                        {/* Dropdown positioned below with invisible bridge to maintain hover */}
+                                        <div className="absolute top-full left-0 pt-1 hidden group-hover:block z-20">
+                                            <div className="bg-white rounded-lg shadow-xl border border-slate-200 p-2 min-w-[220px]">
                                                 {files.map((f, i) => (
                                                     <button
                                                         key={i}
                                                         onClick={() => onDownload(f)}
-                                                        className="w-full text-left px-3 py-2 text-xs text-slate-600 hover:bg-slate-50 rounded flex items-center gap-2"
+                                                        className="w-full text-left px-3 py-2 text-xs text-slate-600 hover:bg-slate-100 rounded flex items-center gap-2 transition-colors"
                                                     >
-                                                        <Icons.FileText className="w-3 h-3 text-slate-400" />
+                                                        <Icons.FileText className="w-3 h-3 text-slate-400 flex-shrink-0" />
                                                         <span className="truncate">{f.name}</span>
+                                                        <Icons.Download className="w-3 h-3 text-slate-400 ml-auto flex-shrink-0" />
                                                     </button>
                                                 ))}
                                             </div>

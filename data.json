@@ -1,14 +1,50 @@
 {
   "categories": [
-    { "id": "company-profile", "name": "Company Profile", "icon": "building" },
-    { "id": "geogrid", "name": "Geogrid", "icon": "grid" },
-    { "id": "geomembrane", "name": "Geomembrane", "icon": "layers" },
-    { "id": "geotextile", "name": "Geotextile", "icon": "fabric" },
-    { "id": "retaining-wall", "name": "Retaining Wall", "icon": "wall" },
-    { "id": "erosion-control", "name": "Kontrol Erosi", "icon": "shield" },
-    { "id": "presentasi", "name": "Presentasi", "icon": "presentation" },
-    { "id": "geocell", "name": "Geocell", "icon": "honeycomb" },
-    { "id": "asphalt", "name": "Asphalt Reinforcement", "icon": "road" }
+    {
+      "id": "company-profile",
+      "name": "Company Profile",
+      "icon": "building"
+    },
+    {
+      "id": "geogrid",
+      "name": "Geogrid",
+      "icon": "grid"
+    },
+    {
+      "id": "geomembrane",
+      "name": "Geomembrane",
+      "icon": "layers"
+    },
+    {
+      "id": "geotextile",
+      "name": "Geotextile",
+      "icon": "fabric"
+    },
+    {
+      "id": "retaining-wall",
+      "name": "Retaining Wall",
+      "icon": "wall"
+    },
+    {
+      "id": "erosion-control",
+      "name": "Kontrol Erosi",
+      "icon": "shield"
+    },
+    {
+      "id": "presentasi",
+      "name": "Presentasi",
+      "icon": "presentation"
+    },
+    {
+      "id": "geocell",
+      "name": "Geocell",
+      "icon": "honeycomb"
+    },
+    {
+      "id": "asphalt",
+      "name": "Asphalt Reinforcement",
+      "icon": "road"
+    }
   ],
   "items": [
     {
@@ -16,7 +52,14 @@
       "title": "Company Profile Multibangun",
       "category": "company-profile",
       "subcategory": null,
-      "tags": ["profil", "perusahaan", "multibangun", "corporate", "distributor", "tensar"],
+      "tags": [
+        "profil",
+        "perusahaan",
+        "multibangun",
+        "corporate",
+        "distributor",
+        "tensar"
+      ],
       "description": "Profil lengkap PT. Multibangun Rekatama Patria, spesialis geosintetik dan distributor resmi Tensar International.",
       "highlight": true,
       "files": [
@@ -24,7 +67,8 @@
           "name": "COMPANY PROFILE MULTIBANGUN - IND_compr.pdf",
           "path": "Assets/00. Company Profile/COMPANY PROFILE MULTIBANGUN - IND_compr.pdf",
           "type": "brosur",
-          "size": "3.3 MB"
+          "size": "3.3 MB",
+          "gdriveId": "1mYpLVvew405MNW1ON5x-vpJCsxIMLnQg"
         }
       ]
     },
@@ -33,20 +77,29 @@
       "title": "Tensar Geogrid General",
       "category": "geogrid",
       "subcategory": "General",
-      "tags": ["geogrid", "tensar", "general", "overview", "basal", "reinforcement"],
+      "tags": [
+        "geogrid",
+        "tensar",
+        "general",
+        "overview",
+        "basal",
+        "reinforcement"
+      ],
       "description": "Brosur umum produk Tensar Geogrid termasuk aplikasi basal reinforcement untuk perkuatan tanah dasar.",
       "files": [
         {
           "name": "Brosur Tensar General.pdf",
           "path": "Assets/01. Geogrid/00. General/Brosur Tensar General.pdf",
           "type": "brosur",
-          "size": "9 MB"
+          "size": "9 MB",
+          "gdriveId": "1KP3XbKRNkWVRYrJdOX2o-uEcStKFn9GM"
         },
         {
           "name": "Brosur Tensar Basal Reinforcement.pdf",
           "path": "Assets/01. Geogrid/00. General/Brosur Tensar Basal Reinforcement.pdf",
           "type": "brosur",
-          "size": "2.2 MB"
+          "size": "2.2 MB",
+          "gdriveId": "1R64b1woFDOxYSAQeLlwI344orbHRpdA7"
         }
       ]
     },
@@ -55,44 +108,59 @@
       "title": "Tensar Geogrid Uniaxial RE Series",
       "category": "geogrid",
       "subcategory": "Uniaxial",
-      "tags": ["uniaxial", "geogrid", "RE520", "RE540", "RE570", "RE580", "dinding penahan", "retaining wall"],
+      "tags": [
+        "uniaxial",
+        "geogrid",
+        "RE520",
+        "RE540",
+        "RE570",
+        "RE580",
+        "dinding penahan",
+        "retaining wall"
+      ],
       "description": "Geogrid uniaxial untuk perkuatan dinding penahan tanah dan struktur MSE wall dengan kekuatan tarik tinggi.",
       "files": [
         {
           "name": "Spesifikasi RE540.pdf",
           "path": "Assets/01. Geogrid/01. Uniaxial/02. Spesifikasi/MS_RE540-120-30_2018.pdf",
           "type": "spesifikasi",
-          "size": "0.5 MB"
+          "size": "0.5 MB",
+          "gdriveId": "1jPbu87-E0k5KOVtpQqg-YsergPSDpoR2"
         },
         {
           "name": "Spesifikasi RE570.pdf",
           "path": "Assets/01. Geogrid/01. Uniaxial/02. Spesifikasi/MS_RE570-120-30_2018.pdf",
           "type": "spesifikasi",
-          "size": "0.5 MB"
+          "size": "0.5 MB",
+          "gdriveId": "1Blaix0cBNFBIS2okDEDlP28IEgLxdeHE"
         },
         {
           "name": "Spesifikasi RE580.pdf",
           "path": "Assets/01. Geogrid/01. Uniaxial/02. Spesifikasi/MS_RE580-120-30_2018.pdf",
           "type": "spesifikasi",
-          "size": "0.5 MB"
+          "size": "0.5 MB",
+          "gdriveId": "1_cRLzLYjWvoB2W498Fcg_X7_PBDw_lKR"
         },
         {
           "name": "Technical Note RE500 Series.pdf",
           "path": "Assets/01. Geogrid/01. Uniaxial/02. Spesifikasi/Technical Note_RE500 Series spec30.pdf",
           "type": "spesifikasi",
-          "size": "0.3 MB"
+          "size": "0.3 MB",
+          "gdriveId": "173KAXfmlQYHizZL5NrDhbijW5CsDQsIn"
         },
         {
           "name": "Hasil Uji RE540-570-580.pdf",
           "path": "Assets/01. Geogrid/01. Uniaxial/03. Hasil Uji/Hasil Test Geogrid Uniaxial RE540-570-580.pdf",
           "type": "hasil-uji",
-          "size": "1 MB"
+          "size": "1 MB",
+          "gdriveId": "1P1WcsaREyFhCVXU6m0x08RE50MTHOcNh"
         },
         {
           "name": "Sertifikasi BBA.pdf",
           "path": "Assets/01. Geogrid/01. Uniaxial/04. Sertifikasi/BBA_H202_TENSAR RE AND RE500 GEOGRIDS FOR REINFORCED SOIL EMBANKMENTS.pdf",
           "type": "sertifikasi",
-          "size": "2 MB"
+          "size": "2 MB",
+          "gdriveId": "1CY-HOWTvLgQjwG3bo8Ky_5hyDbXFp9W2"
         }
       ]
     },
@@ -101,50 +169,65 @@
       "title": "Tensar Geogrid Biaxial SS Series",
       "category": "geogrid",
       "subcategory": "Biaxial",
-      "tags": ["biaxial", "geogrid", "SS20", "SS30", "SS40", "stabilisasi", "jalan"],
+      "tags": [
+        "biaxial",
+        "geogrid",
+        "SS20",
+        "SS30",
+        "SS40",
+        "stabilisasi",
+        "jalan"
+      ],
       "description": "Geogrid biaxial untuk stabilisasi tanah dasar dan perkuatan perkerasan jalan dengan bukaan persegi.",
       "files": [
         {
           "name": "Brosur Tensar Geogrid Biaxial SS.pdf",
           "path": "Assets/01. Geogrid/02. Biaxial/01. Brosur/Brosur Tensar Geogrid Biaxial SS.pdf",
           "type": "brosur",
-          "size": "2 MB"
+          "size": "2 MB",
+          "gdriveId": "11QSh2YxuL41NQccDr75Ws6LBtDDjYnpk"
         },
         {
           "name": "Spesifikasi SS30.pdf",
           "path": "Assets/01. Geogrid/02. Biaxial/02. Spesifikasi/Model Specification_SS30.pdf",
           "type": "spesifikasi",
-          "size": "0.5 MB"
+          "size": "0.5 MB",
+          "gdriveId": "1mTod6x92JRmVWZylqeqaZUy8hAOsqCYW"
         },
         {
           "name": "Technical Note SS20.pdf",
           "path": "Assets/01. Geogrid/02. Biaxial/02. Spesifikasi/Technical Note Tensar Geogrid Biaxial SS20.pdf",
           "type": "spesifikasi",
-          "size": "0.3 MB"
+          "size": "0.3 MB",
+          "gdriveId": "1f--TWBS-YVmPNOTyhLQTTdufvyh3zZsu"
         },
         {
           "name": "Technical Note SS30.pdf",
           "path": "Assets/01. Geogrid/02. Biaxial/02. Spesifikasi/Technical Note Tensar Geogrid Biaxial SS30.pdf",
           "type": "spesifikasi",
-          "size": "0.3 MB"
+          "size": "0.3 MB",
+          "gdriveId": "1l0nhh7fZW_CAVGCClalBDZKz77kNWFFn"
         },
         {
           "name": "Technical Note SS40.pdf",
           "path": "Assets/01. Geogrid/02. Biaxial/02. Spesifikasi/Technical Note Tensar Geogrid Biaxial SS40.pdf",
           "type": "spesifikasi",
-          "size": "0.3 MB"
+          "size": "0.3 MB",
+          "gdriveId": "1JzF6-aIV1jcI1VlyEt5OlPTFZAMGaQv4"
         },
         {
           "name": "Hasil Uji SS40.pdf",
           "path": "Assets/01. Geogrid/02. Biaxial/03. Hasil Uji/Test Report Tensar Geogrid Biaxial SS40.pdf",
           "type": "hasil-uji",
-          "size": "1 MB"
+          "size": "1 MB",
+          "gdriveId": "1jACoBQ2FZfVtPR0SAcDqtlhdFXtttmSM"
         },
         {
           "name": "Metode Pemasangan Biaxial.pdf",
           "path": "Assets/01. Geogrid/02. Biaxial/04. Metode Pemasangan/Installation Gudeline Biaxial Geogrid.pdf",
           "type": "metode",
-          "size": "1 MB"
+          "size": "1 MB",
+          "gdriveId": "1L8GZzaQbtvbzu5zuK7jDMczbrOWqAxDt"
         }
       ]
     },
@@ -153,7 +236,24 @@
       "title": "Tensar TriAx Geogrid",
       "category": "geogrid",
       "subcategory": "Triaxial",
-      "tags": ["triax", "triaxial", "geogrid", "TX130", "TX150", "TX160", "TX170", "TX180", "TX190", "segitiga", "stabilisasi", "jalan", "pertambangan", "mining", "kereta api", "oil gas"],
+      "tags": [
+        "triax",
+        "triaxial",
+        "geogrid",
+        "TX130",
+        "TX150",
+        "TX160",
+        "TX170",
+        "TX180",
+        "TX190",
+        "segitiga",
+        "stabilisasi",
+        "jalan",
+        "pertambangan",
+        "mining",
+        "kereta api",
+        "oil gas"
+      ],
       "description": "Geogrid dengan bukaan segitiga revolusioner untuk stabilisasi tanah dasar dengan efisiensi tinggi, mengurangi ketebalan agregat.",
       "highlight": true,
       "files": [
@@ -161,73 +261,85 @@
           "name": "Brosur Tensar Geogrid TRIAX.pdf",
           "path": "Assets/01. Geogrid/03. Triaxial/01. Brosur/Brosur Tensar Geogrid TRIAX.pdf",
           "type": "brosur",
-          "size": "2.3 MB"
+          "size": "2.3 MB",
+          "gdriveId": "1Dr6oV4iWjpz9u-iYOqg0c880WLmPuWZe"
         },
         {
           "name": "Brosur Stabilisasi Tanah Dasar.pdf",
           "path": "Assets/01. Geogrid/03. Triaxial/01. Brosur/Brosur Tensar Stabilisasi Tanah Dasar.pdf",
           "type": "brosur",
-          "size": "2.7 MB"
+          "size": "2.7 MB",
+          "gdriveId": "1E3-d6cE6r09EpOe2DGpS0DVKrJWYwxrd"
         },
         {
           "name": "Brosur Untuk Kereta Api.pdf",
           "path": "Assets/01. Geogrid/03. Triaxial/01. Brosur/Brosur Tensar Untuk Kereta Api.pdf",
           "type": "brosur",
-          "size": "3.5 MB"
+          "size": "3.5 MB",
+          "gdriveId": "1o2v1PzEpfeFX39MYPThq7nClimYcKsJ8"
         },
         {
           "name": "Brosur Untuk Oil and Gas.pdf",
           "path": "Assets/01. Geogrid/03. Triaxial/01. Brosur/Brosur Tensar Untuk Oil and Gas.pdf",
           "type": "brosur",
-          "size": "1.9 MB"
+          "size": "1.9 MB",
+          "gdriveId": "1DpztelAV7SeuQ-c_gDt8xLRhMGXSGn6C"
         },
         {
           "name": "Brosur Untuk Pertambangan.pdf",
           "path": "Assets/01. Geogrid/03. Triaxial/01. Brosur/Brosur Tensar Untuk Pertambangan.pdf",
           "type": "brosur",
-          "size": "1.2 MB"
+          "size": "1.2 MB",
+          "gdriveId": "1HO-ojdnidsip-u6n6mojL-YW1CgS9Jkz"
         },
         {
           "name": "Technical Note TX130S.pdf",
           "path": "Assets/01. Geogrid/03. Triaxial/02. Spesifikasi/Technical Note Tensar TRIAX TX130S.pdf",
           "type": "spesifikasi",
-          "size": "0.3 MB"
+          "size": "0.3 MB",
+          "gdriveId": "1JtMW-kum1y75OjQVeECFLH9r9tB-Vf24"
         },
         {
           "name": "Technical Note TX150.pdf",
           "path": "Assets/01. Geogrid/03. Triaxial/02. Spesifikasi/Technical Note Tensar TRIAX TX150.pdf",
           "type": "spesifikasi",
-          "size": "0.3 MB"
+          "size": "0.3 MB",
+          "gdriveId": "1l_giyCyy-__yZiyCx-kRgsUfsMAQrTfj"
         },
         {
           "name": "Technical Note TX160.pdf",
           "path": "Assets/01. Geogrid/03. Triaxial/02. Spesifikasi/Technical Note Tensar TRIAX TX160.pdf",
           "type": "spesifikasi",
-          "size": "0.3 MB"
+          "size": "0.3 MB",
+          "gdriveId": "1oG500jyS_ONQF0l9w3WpU2ZvjaOHTcju"
         },
         {
           "name": "Technical Note TX170.pdf",
           "path": "Assets/01. Geogrid/03. Triaxial/02. Spesifikasi/Technical Note Tensar TRIAX TX170.pdf",
           "type": "spesifikasi",
-          "size": "0.3 MB"
+          "size": "0.3 MB",
+          "gdriveId": "1TQ1U9Rl7Yi-cDXegqKXnowITM9Qq7zKX"
         },
         {
           "name": "Technical Note TX180.pdf",
           "path": "Assets/01. Geogrid/03. Triaxial/02. Spesifikasi/Technical Note Tensar TRIAX TX180.pdf",
           "type": "spesifikasi",
-          "size": "0.3 MB"
+          "size": "0.3 MB",
+          "gdriveId": "1b92XfQ82Mgrn7U3W1oP1WpBOSVGWql5V"
         },
         {
           "name": "Technical Note TX190L.pdf",
           "path": "Assets/01. Geogrid/03. Triaxial/02. Spesifikasi/Technical Note Tensar TRIAX TX190 L.pdf",
           "type": "spesifikasi",
-          "size": "0.3 MB"
+          "size": "0.3 MB",
+          "gdriveId": "1eVNcwzjhmMpIzbzU1KweZR7aUlLlRPOL"
         },
         {
           "name": "Metode Pemasangan TriAx (New).pdf",
           "path": "Assets/01. Geogrid/03. Triaxial/03. Metode Pemasangan/Installation Guide line TriAx - New.pdf",
           "type": "metode",
-          "size": "1 MB"
+          "size": "1 MB",
+          "gdriveId": "1GUZfOn5S82YVELuVjInFBZCGRdRYDZNF"
         }
       ]
     },
@@ -236,32 +348,47 @@
       "title": "Case History TriAx Geogrid",
       "category": "geogrid",
       "subcategory": "Triaxial",
-      "tags": ["case history", "proyek", "referensi", "triax", "jalan", "perkebunan", "sawit", "pengeboran", "minyak", "pertamina"],
+      "tags": [
+        "case history",
+        "proyek",
+        "referensi",
+        "triax",
+        "jalan",
+        "perkebunan",
+        "sawit",
+        "pengeboran",
+        "minyak",
+        "pertamina"
+      ],
       "description": "Kumpulan studi kasus dan referensi proyek penggunaan TriAx Geogrid di berbagai aplikasi di Indonesia.",
       "files": [
         {
           "name": "Case History Jalan Akses Pengeboran Minyak Kuala Tungkal.pdf",
           "path": "Assets/01. Geogrid/03. Triaxial/07. Case History/Case History Jalan Akses Pengeboran Minyak Kuala Tungkal.pdf",
           "type": "case-history",
-          "size": "2 MB"
+          "size": "2 MB",
+          "gdriveId": "1CMhhPSmeq9rmB7OaIYvtbcsqlw7El_rw"
         },
         {
           "name": "Case History Jalan Akses Pengeboran Minyak Pertamina.pdf",
           "path": "Assets/01. Geogrid/03. Triaxial/07. Case History/Case History Jalan Akses Pengeboran Minyak Pertamina.pdf",
           "type": "case-history",
-          "size": "2 MB"
+          "size": "2 MB",
+          "gdriveId": "1wpawcbo42WcJ90k_kaIl8toAgdKG5jRr"
         },
         {
           "name": "Case History Perkebunan Kelapa Sawit Banjarmasin.pdf",
           "path": "Assets/01. Geogrid/03. Triaxial/07. Case History/Case History Jalan Akses Perkebunan Kelapa Sawit Banjarmasin.pdf",
           "type": "case-history",
-          "size": "2 MB"
+          "size": "2 MB",
+          "gdriveId": "1IGXuqrDM5haEtWg73-YZFqu4IHyFcmFC"
         },
         {
           "name": "Case History Perbaikan Jalan Citra Garden Cibubur.pdf",
           "path": "Assets/01. Geogrid/03. Triaxial/07. Case History/Case History Perbaikan Jalan Citra Garden Cibubur.pdf",
           "type": "case-history",
-          "size": "2 MB"
+          "size": "2 MB",
+          "gdriveId": "1PYNjAHcOy5l--z14ycNvi5-78ysXpU3n"
         }
       ]
     },
@@ -270,7 +397,17 @@
       "title": "Tensar InterAx Geogrid (NX Series)",
       "category": "geogrid",
       "subcategory": "InterAx",
-      "tags": ["interax", "NX", "HX", "geogrid", "terbaru", "latest", "next generation", "mining", "heavy duty"],
+      "tags": [
+        "interax",
+        "NX",
+        "HX",
+        "geogrid",
+        "terbaru",
+        "latest",
+        "next generation",
+        "mining",
+        "heavy duty"
+      ],
       "description": "Teknologi geogrid generasi terbaru dari Tensar dengan performa lebih tinggi untuk beban berat dan area pertambangan.",
       "highlight": true,
       "files": [
@@ -278,13 +415,15 @@
           "name": "Tensar InterAx Flyer.pdf",
           "path": "Assets/01. Geogrid/04. InterAx/01. Brosur/Tensar Anatomy w TensarPlus Flyer - MRP - EN.pdf",
           "type": "brosur",
-          "size": "10.7 MB"
+          "size": "10.7 MB",
+          "gdriveId": "1rxzWk_yuNNfP1splJR6zuJV9HOJOxXk_"
         },
         {
           "name": "Tensar H Series Flyer.pdf",
           "path": "Assets/01. Geogrid/04. InterAx/01. Brosur/HX Series/Tensar HSeries Flyer - EN - MRP.pdf",
           "type": "brosur",
-          "size": "1 MB"
+          "size": "1 MB",
+          "gdriveId": "1H_DDo_rl-mNn1TMzyKWePTLxG-f9I94F"
         }
       ]
     },
@@ -293,44 +432,60 @@
       "title": "Huitex HDPE Geomembrane",
       "category": "geomembrane",
       "subcategory": null,
-      "tags": ["geomembrane", "HDPE", "huitex", "lining", "kolam", "limbah", "tambak", "landfill", "kedap air"],
+      "tags": [
+        "geomembrane",
+        "HDPE",
+        "huitex",
+        "lining",
+        "kolam",
+        "limbah",
+        "tambak",
+        "landfill",
+        "kedap air"
+      ],
       "description": "Lapisan kedap air (impermeable liner) untuk kolam limbah, penampungan air, tambak, dan aplikasi landfill.",
       "files": [
         {
           "name": "Brosur Geomembrane Huitex.pdf",
           "path": "Assets/02. Geomembrane/01. Brosur/Brosur Geomembrane Huitex.pdf",
           "type": "brosur",
-          "size": "0.4 MB"
+          "size": "0.4 MB",
+          "gdriveId": "1oKouvaZyZuPrBZW3ziNZBOynICx5PmTH"
         },
         {
           "name": "Brosur Geomembrane Huitex Complete.pdf",
           "path": "Assets/02. Geomembrane/01. Brosur/Brosur Geomembrane Huitex-Complete.pdf",
           "type": "brosur",
-          "size": "10.8 MB"
+          "size": "10.8 MB",
+          "gdriveId": "1AC3Pe9WEIzww9g0RXUg2v4AzHzWOJdMY"
         },
         {
           "name": "Spesifikasi HDPE Smooth.pdf",
           "path": "Assets/02. Geomembrane/02. Spesifikasi/Huitex HDPE Geomembrane Smooth Specification.pdf",
           "type": "spesifikasi",
-          "size": "0.04 MB"
+          "size": "0.04 MB",
+          "gdriveId": "1DznoFYAXxI27IRBVRSnftbzVVTpUzclW"
         },
         {
           "name": "Spesifikasi HDPE Textured.pdf",
           "path": "Assets/02. Geomembrane/02. Spesifikasi/Hutex HDPE Geomembrane Textured Spec.pdf",
           "type": "spesifikasi",
-          "size": "0.03 MB"
+          "size": "0.03 MB",
+          "gdriveId": "1t7BRMIRiTVQ5aSaS5PMYu7yWb9YB1UAd"
         },
         {
           "name": "Chemical Resistance Data.pdf",
           "path": "Assets/02. Geomembrane/02. Spesifikasi/Chemical resistance Geomembrane data sheet.pdf",
           "type": "spesifikasi",
-          "size": "0.03 MB"
+          "size": "0.03 MB",
+          "gdriveId": "1Dg1ziPOBIJMc_eQHXbLglCOtcDFF6AGk"
         },
         {
           "name": "Metode Pemasangan Geomembrane.pdf",
           "path": "Assets/02. Geomembrane/08. Metode Pemasangan/Geomembrane Installation Reference Manual.pdf",
           "type": "metode",
-          "size": "0.9 MB"
+          "size": "0.9 MB",
+          "gdriveId": "1TJe_wAeFj6tGqAoHEzhhYt7mJOH-QTR8"
         }
       ]
     },
@@ -339,20 +494,31 @@
       "title": "Geotextile Non-Woven",
       "category": "geotextile",
       "subcategory": null,
-      "tags": ["geotextile", "non woven", "PET", "PP", "separator", "filter", "kain", "penyaring"],
+      "tags": [
+        "geotextile",
+        "non woven",
+        "PET",
+        "PP",
+        "separator",
+        "filter",
+        "kain",
+        "penyaring"
+      ],
       "description": "Material pemisah dan penyaring (separator & filtration) berbahan polyester (PET) atau polypropylene (PP).",
       "files": [
         {
           "name": "Datasheet Geotextile Non Woven PET.pdf",
           "path": "Assets/03. Geotextile/02. Spesifikasi/Datasheet Geotextile Non Woven PET.pdf",
           "type": "spesifikasi",
-          "size": "0.4 MB"
+          "size": "0.4 MB",
+          "gdriveId": "1_wvHQdMWDaVeslQ29n48xZg4a0Io0CaV"
         },
         {
           "name": "Datasheet Geotextile Non Woven PP.pdf",
           "path": "Assets/03. Geotextile/02. Spesifikasi/Datasheet Geotextile Non Woven PP.pdf",
           "type": "spesifikasi",
-          "size": "0.2 MB"
+          "size": "0.2 MB",
+          "gdriveId": "17MFyfQCXEmw17QuSn9p0_2l0GoDtx7H7"
         }
       ]
     },
@@ -361,7 +527,15 @@
       "title": "Multiblock Retaining Wall System",
       "category": "retaining-wall",
       "subcategory": "Multiblock",
-      "tags": ["multiblock", "MBS", "dinding penahan", "retaining wall", "beton", "modular", "blok"],
+      "tags": [
+        "multiblock",
+        "MBS",
+        "dinding penahan",
+        "retaining wall",
+        "beton",
+        "modular",
+        "blok"
+      ],
       "description": "Sistem dinding penahan tanah menggunakan modular blok beton dan perkuatan Geogrid Uniaxial RE Series.",
       "highlight": true,
       "files": [
@@ -369,25 +543,29 @@
           "name": "Brosur Multiblock Retaining Wall.pdf",
           "path": "Assets/04. Retaining Wall/01. Multiblock Retaining Wall System/01. Brosur/Brosur Tensar untuk Multiblock Retaining Wall System.pdf",
           "type": "brosur",
-          "size": "2.3 MB"
+          "size": "2.3 MB",
+          "gdriveId": "1nowR9YafQVZqkjkotYm9eWLWeJXZ40Dy"
         },
         {
           "name": "Brosur TensarTech Earth Retaining Systems.pdf",
           "path": "Assets/04. Retaining Wall/01. Multiblock Retaining Wall System/01. Brosur/Brosur TensarTech_Earth_Retaining_Systems.pdf",
           "type": "brosur",
-          "size": "2.9 MB"
+          "size": "2.9 MB",
+          "gdriveId": "1jOcV7HN-R1vebIxrR0H4lpMJzkXF0oxF"
         },
         {
           "name": "Presentasi Multiblock (PDF).pdf",
           "path": "Assets/09. Presentasi/PDF/MULTIBLOCK RETAINING WALL SYSTEM.pdf",
           "type": "presentasi",
-          "size": "6.9 MB"
+          "size": "6.9 MB",
+          "gdriveId": "16x78gJxwtqdl2_zvNcGl1g9NvE7ZQFX-"
         },
         {
           "name": "Presentasi Multiblock.pptx",
           "path": "Assets/04. Retaining Wall/01. Multiblock Retaining Wall System/00. Presentasi/MULTIBLOCK RETAINING WALL SYSTEM New 2024.pptx",
           "type": "presentasi",
-          "size": "286 MB"
+          "size": "286 MB",
+          "gdriveId": "1ZsmFV3zC2mpZCSQYyv2IJFCIUqu6BKov"
         }
       ]
     },
@@ -396,20 +574,32 @@
       "title": "SierraScape Retaining Wall System",
       "category": "retaining-wall",
       "subcategory": "SierraScape",
-      "tags": ["sierrascape", "sierra", "wire", "kawat", "mesh", "vegetasi", "hijau", "green wall", "lereng"],
+      "tags": [
+        "sierrascape",
+        "sierra",
+        "wire",
+        "kawat",
+        "mesh",
+        "vegetasi",
+        "hijau",
+        "green wall",
+        "lereng"
+      ],
       "description": "Sistem dinding penahan tanah kawat (wire mesh) yang bisa ditanami vegetasi atau diisi batu pecah.",
       "files": [
         {
           "name": "Brosur SierraScape.pdf",
           "path": "Assets/04. Retaining Wall/02. Sierrascape Retaining Wall System/01. Brosur/Sierra Scape Retaining Wall System Brosur.pdf",
           "type": "brosur",
-          "size": "7.2 MB"
+          "size": "7.2 MB",
+          "gdriveId": "1f2EWIAm3Rp7h5ONlOacbqSJaNGkuCZqm"
         },
         {
           "name": "Presentasi SierraScape (PDF).pdf",
           "path": "Assets/09. Presentasi/PDF/PPT SIERRASCAPE RETANING WALL SYSTEM - MULTIBANGUN.pdf",
           "type": "presentasi",
-          "size": "4.3 MB"
+          "size": "4.3 MB",
+          "gdriveId": "1Aj21hILeAOdQZ6eVUycC9qaSSVQ1Xjwb"
         }
       ]
     },
@@ -418,20 +608,33 @@
       "title": "V-Max Erosion Control",
       "category": "erosion-control",
       "subcategory": null,
-      "tags": ["vmax", "V-Max", "erosi", "erosion", "control", "TRM", "mat", "sungai", "lereng", "saluran"],
+      "tags": [
+        "vmax",
+        "V-Max",
+        "erosi",
+        "erosion",
+        "control",
+        "TRM",
+        "mat",
+        "sungai",
+        "lereng",
+        "saluran"
+      ],
       "description": "Solusi turf reinforcement mat untuk mencegah erosi pada lereng timbunan, galian, dan saluran air.",
       "files": [
         {
           "name": "Brosur Tensar V-Max.pdf",
           "path": "Assets/08. VMAX/Brosur Tensar untuk Kontrol Erosi V-Max.pdf",
           "type": "brosur",
-          "size": "2 MB"
+          "size": "2 MB",
+          "gdriveId": "1f6va0LBbjvdjgjBrk1NzMmgcMuvPCs99"
         },
         {
           "name": "Pedoman Instalasi V-Max C350.pdf",
           "path": "Assets/08. VMAX/08. Metode Pemasangan/Pedoman Instalasi Tensar Vmax C350.pdf",
           "type": "metode",
-          "size": "0.6 MB"
+          "size": "0.6 MB",
+          "gdriveId": "1auzwu2fS3yTZBoPNhqgm6tn1EMP86nrv"
         }
       ]
     },
@@ -440,38 +643,51 @@
       "title": "Huitex Geocell",
       "category": "geocell",
       "subcategory": null,
-      "tags": ["geocell", "huitex", "honeycomb", "sarang lebah", "slope", "retaining wall", "stabilisasi"],
+      "tags": [
+        "geocell",
+        "huitex",
+        "honeycomb",
+        "sarang lebah",
+        "slope",
+        "retaining wall",
+        "stabilisasi"
+      ],
       "description": "Sistem geocell berbentuk sarang lebah untuk stabilisasi lereng, ground stabilization, dan dinding penahan.",
       "files": [
         {
           "name": "Brosur Geocell.pdf",
           "path": "Assets/10. Geocell/Brosur Geocell/Geocell Brochure.pdf",
           "type": "brosur",
-          "size": "2.9 MB"
+          "size": "2.9 MB",
+          "gdriveId": "1PQPPJRPEA5qVGtEAwr116AA_nMlDh8CB"
         },
         {
           "name": "Spesifikasi Geocell.pdf",
           "path": "Assets/10. Geocell/Brosur Geocell/Spesification Geocell_type.pdf",
           "type": "spesifikasi",
-          "size": "0.1 MB"
+          "size": "0.1 MB",
+          "gdriveId": "1Z7tLcTG5YEFbrAJ0QLP60e7lt5WSmf2o"
         },
         {
           "name": "Instalasi Geocell - Ground Stabilization.pdf",
           "path": "Assets/10. Geocell/Brosur Geocell/HUITEX Geocell installation Reference for Ground Stabiliz..pdf",
           "type": "metode",
-          "size": "0.3 MB"
+          "size": "0.3 MB",
+          "gdriveId": "14X6Rypr-TTg4vjZ9zbSw1JmqiBYiu5At"
         },
         {
           "name": "Instalasi Geocell - Retaining Walls.pdf",
           "path": "Assets/10. Geocell/Brosur Geocell/HUITEX Geocell installation Reference for Retaining Walls.pdf",
           "type": "metode",
-          "size": "0.3 MB"
+          "size": "0.3 MB",
+          "gdriveId": "1OWoCKEh4CgWpnh8CazGwL5xr-v-_0hSi"
         },
         {
           "name": "Instalasi Geocell - Slope Protection.pdf",
           "path": "Assets/10. Geocell/Brosur Geocell/HUITEX Geocell installation Reference for Slope Plotection-new.pdf",
           "type": "metode",
-          "size": "0.4 MB"
+          "size": "0.4 MB",
+          "gdriveId": "1QXmW5l-4YYwqjhqCcGro_gbrN7wLSLAK"
         }
       ]
     },
@@ -480,20 +696,31 @@
       "title": "HX-AE Asphalt Reinforcement",
       "category": "asphalt",
       "subcategory": null,
-      "tags": ["HX-AE", "asphalt", "aspal", "reinforcement", "overlay", "jalan", "retak", "crack"],
+      "tags": [
+        "HX-AE",
+        "asphalt",
+        "aspal",
+        "reinforcement",
+        "overlay",
+        "jalan",
+        "retak",
+        "crack"
+      ],
       "description": "Geogrid untuk perkuatan lapisan aspal dan mencegah reflective cracking pada jalan overlay.",
       "files": [
         {
           "name": "Brosur HX-AE Asphalt.pdf",
           "path": "Assets/11. HX-AE Asphalt Reinforcement/HX-AE -Asphalt-Flyer.pdf",
           "type": "brosur",
-          "size": "5.8 MB"
+          "size": "5.8 MB",
+          "gdriveId": "1P7g35SC6enxGH3W0BTNZwFaSDwkxBGYM"
         },
         {
           "name": "Technical Note HX-AE.pdf",
           "path": "Assets/11. HX-AE Asphalt Reinforcement/TN_HX-AE.pdf",
           "type": "spesifikasi",
-          "size": "0.09 MB"
+          "size": "0.09 MB",
+          "gdriveId": "1Qw8gPaigU4ShXL20q_gJz0OEvwVVMZop"
         }
       ]
     },
@@ -502,14 +729,21 @@
       "title": "Presentasi Geosintetik Konstruksi",
       "category": "presentasi",
       "subcategory": null,
-      "tags": ["presentasi", "konstruksi", "aplikasi", "overview", "geosintetik"],
+      "tags": [
+        "presentasi",
+        "konstruksi",
+        "aplikasi",
+        "overview",
+        "geosintetik"
+      ],
       "description": "Presentasi komprehensif tentang aplikasi geosintetik pada berbagai proyek konstruksi.",
       "files": [
         {
           "name": "Aplikasi Geosintetik pada Proyek Konstruksi.pdf",
           "path": "Assets/09. Presentasi/PDF/APLIKASI GEOSINTETIK PADA PROYEK KONSTRUKSI.pdf",
           "type": "presentasi",
-          "size": "8.7 MB"
+          "size": "8.7 MB",
+          "gdriveId": "14iE4nvhqkAL0isc9p25Rzu7Vn2NBL-kH"
         }
       ]
     },
@@ -518,14 +752,21 @@
       "title": "Presentasi Stabilisasi Tanah Dasar",
       "category": "presentasi",
       "subcategory": null,
-      "tags": ["presentasi", "stabilisasi", "tanah dasar", "geogrid", "jalan"],
+      "tags": [
+        "presentasi",
+        "stabilisasi",
+        "tanah dasar",
+        "geogrid",
+        "jalan"
+      ],
       "description": "Presentasi lengkap mengenai teknik stabilisasi tanah dasar menggunakan geogrid.",
       "files": [
         {
           "name": "Stabilisasi Tanah Dasar Menggunakan Geogrid.pdf",
           "path": "Assets/09. Presentasi/PDF/PRESENTASI STABILISASI TANAH DASAR MENGGUNAKAN GEOGRID.pdf",
           "type": "presentasi",
-          "size": "10.1 MB"
+          "size": "10.1 MB",
+          "gdriveId": "196qzGig7C3dZ6FbNUTTGDj1Sfzlg3Usx"
         }
       ]
     },
@@ -534,14 +775,21 @@
       "title": "Presentasi HDPE Geomembrane",
       "category": "presentasi",
       "subcategory": null,
-      "tags": ["presentasi", "geomembrane", "HDPE", "lining", "kolam"],
+      "tags": [
+        "presentasi",
+        "geomembrane",
+        "HDPE",
+        "lining",
+        "kolam"
+      ],
       "description": "Presentasi detail tentang aplikasi dan instalasi HDPE Geomembrane.",
       "files": [
         {
           "name": "Presentasi HDPE Geomembrane.pdf",
           "path": "Assets/09. Presentasi/PDF/PRESENTASI HDPE GEOMEMBRANE.pdf",
           "type": "presentasi",
-          "size": "3.9 MB"
+          "size": "3.9 MB",
+          "gdriveId": "1kqlEPrD5G2Syqngr_PO2t-plOdznZRSx"
         }
       ]
     },
@@ -550,14 +798,22 @@
       "title": "Solusi Kawasan Industri",
       "category": "presentasi",
       "subcategory": null,
-      "tags": ["industri", "pabrik", "gudang", "kawasan", "industrial", "estate"],
+      "tags": [
+        "industri",
+        "pabrik",
+        "gudang",
+        "kawasan",
+        "industrial",
+        "estate"
+      ],
       "description": "Presentasi solusi geosintetik untuk pengembangan kawasan industri dan pergudangan.",
       "files": [
         {
           "name": "Solusi Geosintetik Kawasan Industri.pdf",
           "path": "Assets/09. Presentasi/PDF/Presentasi Solusi Geosintetik Kawasan Industri.pdf",
           "type": "presentasi",
-          "size": "2.4 MB"
+          "size": "2.4 MB",
+          "gdriveId": "1d5_wEuSa2qTnWWpf-VpkZ1S0AaPxQiG-"
         }
       ]
     },
@@ -566,14 +822,23 @@
       "title": "Aplikasi Pertambangan",
       "category": "presentasi",
       "subcategory": null,
-      "tags": ["tambang", "mining", "hauling", "road", "batu bara", "coal", "pertambangan"],
+      "tags": [
+        "tambang",
+        "mining",
+        "hauling",
+        "road",
+        "batu bara",
+        "coal",
+        "pertambangan"
+      ],
       "description": "Presentasi penerapan teknologi geosintetik untuk efisiensi infrastruktur pertambangan.",
       "files": [
         {
           "name": "Aplikasi Geosintetik untuk Area Pertambangan.pdf",
           "path": "Assets/09. Presentasi/PDF/TN_APLIKASI GEOSINTETIK UNTUK AREA PERTAMBANGAN.pdf",
           "type": "presentasi",
-          "size": "44.9 MB"
+          "size": "44.9 MB",
+          "gdriveId": "1TTulwjqfNyakvSP1_gDmdOLcvL6J3Q13"
         }
       ]
     }

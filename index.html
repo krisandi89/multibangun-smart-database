@@ -400,7 +400,7 @@
                     "tags": ["profil", "perusahaan", "multibangun", "corporate", "distributor", "tensar"],
                     "description": "Profil lengkap PT. Multibangun Rekatama Patria, spesialis geosintetik dan distributor resmi Tensar International.",
                     "highlight": true,
-                    "files": [{ "name": "COMPANY PROFILE MULTIBANGUN - IND_compr.pdf", "path": "Assets/00. Company Profile/COMPANY PROFILE MULTIBANGUN - IND_compr.pdf", "type": "brosur", "size": "3.3 MB" }]
+                    "files": [{ "name": "COMPANY PROFILE MULTIBANGUN - IND_compr.pdf", "path": "Assets/00. Company Profile/COMPANY PROFILE MULTIBANGUN - IND_compr.pdf", "type": "brosur", "size": "3.3 MB", "gdriveId": "1mYpLVvew405MNW1ON5x-vpJCsxIMLnQg" }]
                 },
                 {
                     "id": 2,
@@ -623,12 +623,30 @@
 
         // ==================== MAIN APP ====================
         const MultibangunSmartDatabase = () => {
-            const [database, setDatabase] = useState(EMBEDDED_DATABASE);
+            const [database, setDatabase] = useState({ categories: [], items: [] });
             const [query, setQuery] = useState('');
             const [activeCategory, setActiveCategory] = useState('all');
-            const [results, setResults] = useState(EMBEDDED_DATABASE.items);
+            const [results, setResults] = useState([]);
             const [isScrolled, setIsScrolled] = useState(false);
+            const [isLoading, setIsLoading] = useState(true);
             const searchInputRef = useRef(null);
+
+            // Load database from data.json
+            useEffect(() => {
+                fetch('data.json')
+                    .then(res => res.json())
+                    .then(data => {
+                        setDatabase(data);
+                        setResults(data.items);
+                        setIsLoading(false);
+                    })
+                    .catch(() => {
+                        // Fallback to embedded if fetch fails (local file://)
+                        setDatabase(EMBEDDED_DATABASE);
+                        setResults(EMBEDDED_DATABASE.items);
+                        setIsLoading(false);
+                    });
+            }, []);
 
             // Search & Filter
             useEffect(() => {
@@ -675,19 +693,8 @@
                 return () => window.removeEventListener('keydown', handleKeyDown);
             }, []);
 
-            // Google Drive folder mapping - ACTUAL FOLDER IDs
-            const GDRIVE_BASE = 'https://drive.google.com/drive/folders/';
-            const GDRIVE_FOLDER_IDS = {
-                '00. Company Profile': '1jng_bAuIr87_X22_DYFJsRHqGiC5p_pG',
-                '01. Geogrid': '1Oo17DCTZq9JBc8zxPI7bWdHV2V74cVFN',
-                '02. Geomembrane': '1lDdmwjImQm6IBi7N2xZ5V9pavVBYsAeB',
-                '03. Geotextile': '1wRDdrGtOhEFZFtPeOcLWNqAiU-C0Y9BV',
-                '04. Retaining Wall': '12Ngvas-z0zJu9OXjLwFGjhmdxxIAQKSL',
-                '08. VMAX': '16oZdk57eXpbDKn7fmoS3Xotccp4p6H_s',
-                '09. Presentasi': '1_79AQfTh0hBr-zvyj4WBXUs8SB1bfsNi',
-                '10. Geocell': '1Xep1NGbF69g2NxxURoaHSHjxVZ9EL7XR',
-                '11. HX-AE Asphalt Reinforcement': '1RZSLnkdBnri3ypSuWICG-CXuPpnzTsCu'
-            };
+            // Main Assets folder ID (fallback for search)
+            const GDRIVE_MAIN_FOLDER = '1ED8mMfEQHKM0wlOZBD9adW4F-8KJk96m';
 
             // Download handler - works for local and web
             const handleDownload = (file) => {
@@ -703,18 +710,14 @@
                     link.click();
                     document.body.removeChild(link);
                 } else {
-                    // Web (Vercel): open correct Google Drive subfolder
-                    // Parse the file path to find the main folder
-                    // Example path: "Assets/01. Geogrid/00. General/Brosur Tensar General.pdf"
-                    const pathParts = file.path.split('/');
-                    const mainFolder = pathParts[1]; // e.g., "01. Geogrid"
-
-                    // Get the folder ID, fallback to main Assets folder
-                    const folderId = GDRIVE_FOLDER_IDS[mainFolder] || '1ED8mMfEQHKM0wlOZBD9adW4F-8KJk96m';
-                    const gdriveUrl = GDRIVE_BASE + folderId + '?usp=sharing';
-
-                    // Open in new tab
-                    window.open(gdriveUrl, '_blank');
+                    // Web: Use gdriveId from database
+                    if (file.gdriveId) {
+                        window.open(`https://drive.google.com/file/d/${file.gdriveId}/view`, '_blank');
+                    } else {
+                        // Fallback: Search in main folder
+                        const fileName = file.path.split('/').pop();
+                        window.open(`https://drive.google.com/drive/folders/${GDRIVE_MAIN_FOLDER}?q=${encodeURIComponent(fileName)}`, '_blank');
+                    }
                 }
             };
 

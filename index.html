@@ -28,6 +28,35 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
+        /* Dark mode variables */
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --search-bg: #ffffff;
+        }
+
+        .dark {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border-color: #334155;
+            --search-bg: #1e293b;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
         /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
@@ -35,28 +64,21 @@
         }
 
         ::-webkit-scrollbar-track {
-            background: #f1f5f9;
+            background: var(--bg-secondary);
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
+            background: var(--text-muted);
             border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
-
-        /* Glassmorphism */
-        .glass {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: var(--text-secondary);
         }
 
         /* Gradient text */
         .gradient-text {
-            background: linear-gradient(135deg, #b91c1c 0%, #dc2626 50%, #f87171 100%);
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 50%, #f87171 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -64,27 +86,34 @@
 
         /* Spotlight glow */
         .spotlight-glow {
-            box-shadow: 0 0 0 1px rgba(185, 28, 28, 0.1),
+            background: var(--search-bg);
+            box-shadow: 0 0 0 1px var(--border-color),
                 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-                0 2px 4px -1px rgba(0, 0, 0, 0.06),
-                0 20px 40px -10px rgba(185, 28, 28, 0.15);
+                0 20px 40px -10px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark .spotlight-glow {
+            box-shadow: 0 0 0 1px var(--border-color),
+                0 4px 6px -1px rgba(0, 0, 0, 0.3),
+                0 20px 40px -10px rgba(0, 0, 0, 0.3);
         }
 
         .spotlight-glow:focus-within {
-            box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.2),
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.3),
                 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-                0 2px 4px -1px rgba(0, 0, 0, 0.06),
-                0 25px 50px -12px rgba(185, 28, 28, 0.25);
+                0 25px 50px -12px rgba(0, 0, 0, 0.15);
         }
 
-        /* Card hover effect */
+        /* Card styles */
         .card-hover {
+            background: var(--bg-card);
+            border-color: var(--border-color);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .card-hover:hover {
             transform: translateY(-4px);
-            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.2);
         }
 
         /* File type badge colors */
@@ -122,10 +151,63 @@
             background: #ffedd5;
             color: #c2410c;
         }
+
+        .dark .badge-brosur {
+            background: #1e3a5f;
+            color: #93c5fd;
+        }
+
+        .dark .badge-spesifikasi {
+            background: #14532d;
+            color: #86efac;
+        }
+
+        .dark .badge-metode {
+            background: #451a03;
+            color: #fcd34d;
+        }
+
+        .dark .badge-hasil-uji {
+            background: #3b0764;
+            color: #d8b4fe;
+        }
+
+        .dark .badge-sertifikasi {
+            background: #500724;
+            color: #f9a8d4;
+        }
+
+        .dark .badge-case-history {
+            background: #1e1b4b;
+            color: #a5b4fc;
+        }
+
+        .dark .badge-presentasi {
+            background: #431407;
+            color: #fdba74;
+        }
+
+        /* Theme toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 100;
+            padding: 0.75rem;
+            border-radius: 0.75rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.05);
+        }
     </style>
 </head>
 
-<body class="bg-gradient-to-br from-slate-50 via-white to-slate-100 min-h-screen">
+<body class="min-h-screen">
 
     <div id="root"></div>
 
@@ -627,9 +709,34 @@
             const [query, setQuery] = useState('');
             const [activeCategory, setActiveCategory] = useState('all');
             const [results, setResults] = useState([]);
-            const [isScrolled, setIsScrolled] = useState(false);
             const [isLoading, setIsLoading] = useState(true);
+            const [darkMode, setDarkMode] = useState(() => {
+                if (typeof window !== 'undefined') {
+                    const saved = localStorage.getItem('darkMode');
+                    if (saved !== null) return saved === 'true';
+                    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+                }
+                return false;
+            });
             const searchInputRef = useRef(null);
+
+            // Toggle dark mode
+            const toggleDarkMode = () => {
+                setDarkMode(prev => {
+                    const newValue = !prev;
+                    localStorage.setItem('darkMode', newValue);
+                    return newValue;
+                });
+            };
+
+            // Apply dark mode class to body
+            useEffect(() => {
+                if (darkMode) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            }, [darkMode]);
 
             // Load database from data.json
             useEffect(() => {
@@ -670,12 +777,7 @@
                 setResults(filtered);
             }, [query, activeCategory, database.items]);
 
-            // Scroll effect
-            useEffect(() => {
-                const handleScroll = () => setIsScrolled(window.scrollY > 20);
-                window.addEventListener('scroll', handleScroll);
-                return () => window.removeEventListener('scroll', handleScroll);
-            }, []);
+
 
             // Keyboard shortcut
             useEffect(() => {
@@ -733,45 +835,31 @@
             return (
                 <div className="min-h-screen">
 
-                    {/* HEADER */}
-                    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'glass shadow-sm py-3' : 'bg-transparent py-5'
-                        }`}>
-                        <div className="max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <div className="w-11 h-11 bg-gradient-to-br from-brand-600 to-brand-700 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-brand-200">
-                                    M
-                                </div>
-                                <div>
-                                    <h1 className="text-xl font-black tracking-tight text-slate-900 leading-none">MULTIBANGUN</h1>
-                                    <span className="text-[10px] font-semibold text-slate-400 tracking-widest uppercase">Smart Database</span>
-                                </div>
-                            </div>
-
-                            <nav className="hidden md:flex items-center gap-2">
-                                <a href="#" className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors rounded-lg hover:bg-slate-100">
-                                    Produk
-                                </a>
-                                <a href="#" className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors rounded-lg hover:bg-slate-100">
-                                    Proyek
-                                </a>
-                                <a
-                                    href="https://wa.me/6281112345678"
-                                    target="_blank"
-                                    className="ml-2 px-5 py-2.5 bg-gradient-to-r from-slate-800 to-slate-900 text-white rounded-xl text-sm font-semibold hover:from-slate-900 hover:to-black transition-all shadow-lg hover:shadow-xl"
-                                >
-                                    Hubungi Kami
-                                </a>
-                            </nav>
-                        </div>
-                    </header>
+                    {/* Theme Toggle */}
+                    <button
+                        onClick={toggleDarkMode}
+                        className="theme-toggle"
+                        aria-label="Toggle dark mode"
+                    >
+                        {darkMode ? (
+                            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" style={{ color: 'var(--text-primary)' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <circle cx="12" cy="12" r="5" />
+                                <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+                            </svg>
+                        ) : (
+                            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" style={{ color: 'var(--text-primary)' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                            </svg>
+                        )}
+                    </button>
 
                     {/* HERO / SPOTLIGHT */}
-                    <div className="pt-32 pb-10 px-4 md:px-8">
+                    <div className="pt-16 pb-10 px-4 md:px-8">
                         <div className="max-w-4xl mx-auto text-center mb-10">
-                            <h2 className="text-4xl md:text-6xl font-black text-slate-900 mb-5 tracking-tight leading-tight">
-                                Temukan <span className="gradient-text">Solusi</span> Geosintetik
-                            </h2>
-                            <p className="text-slate-500 text-lg md:text-xl max-w-2xl mx-auto">
+                            <h1 className="text-3xl md:text-5xl font-black mb-4 tracking-tight leading-tight" style={{ color: 'var(--text-primary)' }}>
+                                Multibangun <span className="gradient-text">Smart</span> Database
+                            </h1>
+                            <p style={{ color: 'var(--text-secondary)' }} className="text-base md:text-lg max-w-2xl mx-auto">
                                 Akses brosur, spesifikasi teknis, dan dokumentasi produk dalam hitungan detik
                             </p>
                         </div>
@@ -788,7 +876,8 @@
                                     value={query}
                                     onChange={(e) => setQuery(e.target.value)}
                                     placeholder="Cari produk, brosur, atau spesifikasi..."
-                                    className="w-full pl-16 pr-32 py-5 bg-transparent rounded-2xl text-lg text-slate-800 placeholder:text-slate-400 focus:outline-none"
+                                    className="w-full pl-16 pr-32 py-5 bg-transparent rounded-2xl text-lg placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none"
+                                    style={{ color: 'var(--text-primary)' }}
                                     autoComplete="off"
                                 />
                                 <div className="absolute inset-y-0 right-4 flex items-center gap-2">
@@ -807,7 +896,7 @@
                             </div>
 
                             {/* Quick Stats */}
-                            <div className="mt-4 flex items-center justify-center gap-6 text-sm text-slate-400">
+                            <div className="mt-4 flex items-center justify-center gap-6 text-sm" style={{ color: 'var(--text-muted)' }}>
                                 <span>{database.items.length} produk</span>
                                 <span>•</span>
                                 <span>{database.items.reduce((acc, item) => acc + item.files.length, 0)} file</span>
@@ -825,9 +914,10 @@
                             <button
                                 onClick={() => setActiveCategory('all')}
                                 className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${activeCategory === 'all'
-                                    ? 'bg-gradient-to-r from-slate-800 to-slate-900 text-white shadow-lg'
-                                    : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
+                                    ? 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg'
+                                    : 'border'
                                     }`}
+                                style={activeCategory === 'all' ? {} : { background: 'var(--bg-card)', color: 'var(--text-secondary)', borderColor: 'var(--border-color)' }}
                             >
                                 Semua
                                 <span className={`ml-2 text-xs px-1.5 py-0.5 rounded-full ${activeCategory === 'all' ? 'bg-white/20' : 'bg-slate-100'}`}>
@@ -861,53 +951,6 @@
                             <EmptyState query={query} />
                         )}
                     </main>
-
-                    {/* FOOTER */}
-                    <footer className="bg-white border-t border-slate-100 py-16">
-                        <div className="max-w-7xl mx-auto px-4 md:px-8">
-                            <div className="grid md:grid-cols-4 gap-12">
-                                <div className="md:col-span-2">
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <div className="w-10 h-10 bg-gradient-to-br from-brand-600 to-brand-700 rounded-xl flex items-center justify-center text-white font-bold shadow-lg">
-                                            M
-                                        </div>
-                                        <div>
-                                            <h4 className="font-bold text-slate-900">MULTIBANGUN</h4>
-                                            <span className="text-xs text-slate-400">Rekatama Patria</span>
-                                        </div>
-                                    </div>
-                                    <p className="text-slate-500 text-sm leading-relaxed max-w-sm">
-                                        Spesialis solusi geosintetik dan distributor resmi Tensar International untuk Indonesia.
-                                        Melayani proyek infrastruktur sejak 1995.
-                                    </p>
-                                </div>
-                                <div>
-                                    <h4 className="font-bold text-slate-900 mb-4">Akses Cepat</h4>
-                                    <ul className="space-y-3 text-sm text-slate-500">
-                                        <li><a href="#" className="hover:text-brand-600 transition-colors flex items-center gap-1">Company Profile <Icons.ExternalLink /></a></li>
-                                        <li><a href="#" className="hover:text-brand-600 transition-colors">Produk Tensar</a></li>
-                                        <li><a href="#" className="hover:text-brand-600 transition-colors">Referensi Proyek</a></li>
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h4 className="font-bold text-slate-900 mb-4">Bantuan Teknis</h4>
-                                    <p className="text-sm text-slate-500 mb-4">
-                                        Butuh analisa desain atau konsultasi teknis?
-                                    </p>
-                                    <a
-                                        href="https://wa.me/6281112345678"
-                                        target="_blank"
-                                        className="inline-flex items-center gap-2 text-sm font-semibold text-brand-600 hover:text-brand-700 transition-colors"
-                                    >
-                                        Hubungi Engineering <Icons.ChevronRight />
-                                    </a>
-                                </div>
-                            </div>
-                            <div className="mt-16 pt-8 border-t border-slate-100 text-center text-xs text-slate-400">
-                                © 2024 PT. Multibangun Rekatama Patria. Smart Database System.
-                            </div>
-                        </div>
-                    </footer>
 
                 </div>
             );

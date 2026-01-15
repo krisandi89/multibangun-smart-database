@@ -1,5 +1,7 @@
 # Multibangun Smart Database
 
+🔗 **Live URL:** https://multibangun-smart-database.vercel.app/
+
 Database produk geosintetik PT. Multibangun Rekatama Patria dengan fitur pencarian spotlight-style.
 
 ## Features

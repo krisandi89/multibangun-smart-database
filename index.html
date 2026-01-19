@@ -848,8 +848,11 @@
                     // Web: Use gdriveId from database
                     if (file.gdriveId) {
                         window.open(`https://drive.google.com/file/d/${file.gdriveId}/view`, '_blank');
+                    } else if (file.gdriveId === '') {
+                        // Direct Repo File (from Admin Upload)
+                        window.open(file.path, '_blank');
                     } else {
-                        // Fallback: Search in main folder
+                        // Fallback: Search in main folder (Legacy/Missing ID)
                         const fileName = file.path.split('/').pop();
                         window.open(`https://drive.google.com/drive/folders/${GDRIVE_MAIN_FOLDER}?q=${encodeURIComponent(fileName)}`, '_blank');
                     }

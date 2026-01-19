@@ -471,251 +471,273 @@
 
         // ==================== EMBEDDED DATABASE ====================
         // Data embedded directly to avoid CORS issues when opening file locally
-        const EMBEDDED_DATABASE = {
-            "categories": [
-                { "id": "company-profile", "name": "Company Profile", "icon": "building" },
-                { "id": "geogrid", "name": "Geogrid", "icon": "grid" },
-                { "id": "geomembrane", "name": "Geomembrane", "icon": "layers" },
-                { "id": "geotextile", "name": "Geotextile", "icon": "fabric" },
-                { "id": "retaining-wall", "name": "Retaining Wall", "icon": "wall" },
-                { "id": "erosion-control", "name": "Kontrol Erosi", "icon": "shield" },
-                { "id": "presentasi", "name": "Presentasi", "icon": "presentation" },
-                { "id": "geocell", "name": "Geocell", "icon": "honeycomb" },
-                { "id": "asphalt", "name": "Asphalt Reinforcement", "icon": "road" }
-            ],
-            "items": [
-                {
-                    "id": 1,
-                    "title": "Company Profile Multibangun",
-                    "category": "company-profile",
-                    "subcategory": null,
-                    "tags": ["profil", "perusahaan", "multibangun", "corporate", "distributor", "tensar"],
-                    "description": "Profil lengkap PT. Multibangun Rekatama Patria, spesialis geosintetik dan distributor resmi Tensar International.",
-                    "highlight": true,
-                    "files": [{ "name": "COMPANY PROFILE MULTIBANGUN - IND_compr.pdf", "path": "Assets/00. Company Profile/COMPANY PROFILE MULTIBANGUN - IND_compr.pdf", "type": "brosur", "size": "3.3 MB", "gdriveId": "1mYpLVvew405MNW1ON5x-vpJCsxIMLnQg" }]
-                },
-                {
-                    "id": 2,
-                    "title": "Tensar Geogrid General",
-                    "category": "geogrid",
-                    "subcategory": "General",
-                    "tags": ["geogrid", "tensar", "general", "overview", "basal", "reinforcement"],
-                    "description": "Brosur umum produk Tensar Geogrid termasuk aplikasi basal reinforcement untuk perkuatan tanah dasar.",
-                    "files": [
-                        { "name": "Brosur Tensar General.pdf", "path": "Assets/01. Geogrid/00. General/Brosur Tensar General.pdf", "type": "brosur", "size": "9 MB" },
-                        { "name": "Brosur Tensar Basal Reinforcement.pdf", "path": "Assets/01. Geogrid/00. General/Brosur Tensar Basal Reinforcement.pdf", "type": "brosur", "size": "2.2 MB" }
-                    ]
-                },
-                {
-                    "id": 3,
-                    "title": "Tensar Geogrid Uniaxial RE Series",
-                    "category": "geogrid",
-                    "subcategory": "Uniaxial",
-                    "tags": ["uniaxial", "geogrid", "RE520", "RE540", "RE570", "RE580", "dinding penahan", "retaining wall"],
-                    "description": "Geogrid uniaxial untuk perkuatan dinding penahan tanah dan struktur MSE wall dengan kekuatan tarik tinggi.",
-                    "files": [
-                        { "name": "Spesifikasi RE540.pdf", "path": "Assets/01. Geogrid/01. Uniaxial/02. Spesifikasi/MS_RE540-120-30_2018.pdf", "type": "spesifikasi", "size": "0.5 MB" },
-                        { "name": "Spesifikasi RE570.pdf", "path": "Assets/01. Geogrid/01. Uniaxial/02. Spesifikasi/MS_RE570-120-30_2018.pdf", "type": "spesifikasi", "size": "0.5 MB" },
-                        { "name": "Spesifikasi RE580.pdf", "path": "Assets/01. Geogrid/01. Uniaxial/02. Spesifikasi/MS_RE580-120-30_2018.pdf", "type": "spesifikasi", "size": "0.5 MB" },
-                        { "name": "Technical Note RE500 Series.pdf", "path": "Assets/01. Geogrid/01. Uniaxial/02. Spesifikasi/Technical Note_RE500 Series spec30.pdf", "type": "spesifikasi", "size": "0.3 MB" },
-                        { "name": "Hasil Uji RE540-570-580.pdf", "path": "Assets/01. Geogrid/01. Uniaxial/03. Hasil Uji/Hasil Test Geogrid Uniaxial RE540-570-580.pdf", "type": "hasil-uji", "size": "1 MB" },
-                        { "name": "Sertifikasi BBA.pdf", "path": "Assets/01. Geogrid/01. Uniaxial/04. Sertifikasi/BBA_H202_TENSAR RE AND RE500 GEOGRIDS FOR REINFORCED SOIL EMBANKMENTS.pdf", "type": "sertifikasi", "size": "2 MB" }
-                    ]
-                },
-                {
-                    "id": 4,
-                    "title": "Tensar Geogrid Biaxial SS Series",
-                    "category": "geogrid",
-                    "subcategory": "Biaxial",
-                    "tags": ["biaxial", "geogrid", "SS20", "SS30", "SS40", "stabilisasi", "jalan"],
-                    "description": "Geogrid biaxial untuk stabilisasi tanah dasar dan perkuatan perkerasan jalan dengan bukaan persegi.",
-                    "files": [
-                        { "name": "Brosur Tensar Geogrid Biaxial SS.pdf", "path": "Assets/01. Geogrid/02. Biaxial/01. Brosur/Brosur Tensar Geogrid Biaxial SS.pdf", "type": "brosur", "size": "2 MB" },
-                        { "name": "Spesifikasi SS30.pdf", "path": "Assets/01. Geogrid/02. Biaxial/02. Spesifikasi/Model Specification_SS30.pdf", "type": "spesifikasi", "size": "0.5 MB" },
-                        { "name": "Metode Pemasangan Biaxial.pdf", "path": "Assets/01. Geogrid/02. Biaxial/04. Metode Pemasangan/Installation Gudeline Biaxial Geogrid.pdf", "type": "metode", "size": "1 MB" }
-                    ]
-                },
-                {
-                    "id": 5,
-                    "title": "Tensar TriAx Geogrid",
-                    "category": "geogrid",
-                    "subcategory": "Triaxial",
-                    "tags": ["triax", "triaxial", "geogrid", "TX130", "TX150", "TX160", "TX170", "segitiga", "stabilisasi", "jalan", "pertambangan", "mining"],
-                    "description": "Geogrid dengan bukaan segitiga revolusioner untuk stabilisasi tanah dasar dengan efisiensi tinggi, mengurangi ketebalan agregat.",
-                    "highlight": true,
-                    "files": [
-                        { "name": "Brosur Tensar Geogrid TRIAX.pdf", "path": "Assets/01. Geogrid/03. Triaxial/01. Brosur/Brosur Tensar Geogrid TRIAX.pdf", "type": "brosur", "size": "2.3 MB" },
-                        { "name": "Brosur Stabilisasi Tanah Dasar.pdf", "path": "Assets/01. Geogrid/03. Triaxial/01. Brosur/Brosur Tensar Stabilisasi Tanah Dasar.pdf", "type": "brosur", "size": "2.7 MB" },
-                        { "name": "Brosur Untuk Pertambangan.pdf", "path": "Assets/01. Geogrid/03. Triaxial/01. Brosur/Brosur Tensar Untuk Pertambangan.pdf", "type": "brosur", "size": "1.2 MB" },
-                        { "name": "Technical Note TX130S.pdf", "path": "Assets/01. Geogrid/03. Triaxial/02. Spesifikasi/Technical Note Tensar TRIAX TX130S.pdf", "type": "spesifikasi", "size": "0.3 MB" },
-                        { "name": "Metode Pemasangan TriAx.pdf", "path": "Assets/01. Geogrid/03. Triaxial/03. Metode Pemasangan/Installation Guide line TriAx - New.pdf", "type": "metode", "size": "1 MB" }
-                    ]
-                },
-                {
-                    "id": 6,
-                    "title": "Case History TriAx Geogrid",
-                    "category": "geogrid",
-                    "subcategory": "Triaxial",
-                    "tags": ["case history", "proyek", "referensi", "triax", "jalan", "perkebunan", "sawit", "pertamina"],
-                    "description": "Kumpulan studi kasus dan referensi proyek penggunaan TriAx Geogrid di berbagai aplikasi di Indonesia.",
-                    "files": [
-                        { "name": "Case History Pengeboran Minyak Kuala Tungkal.pdf", "path": "Assets/01. Geogrid/03. Triaxial/07. Case History/Case History Jalan Akses Pengeboran Minyak Kuala Tungkal.pdf", "type": "case-history", "size": "2 MB" },
-                        { "name": "Case History Pengeboran Minyak Pertamina.pdf", "path": "Assets/01. Geogrid/03. Triaxial/07. Case History/Case History Jalan Akses Pengeboran Minyak Pertamina.pdf", "type": "case-history", "size": "2 MB" },
-                        { "name": "Case History Perkebunan Kelapa Sawit.pdf", "path": "Assets/01. Geogrid/03. Triaxial/07. Case History/Case History Jalan Akses Perkebunan Kelapa Sawit Banjarmasin.pdf", "type": "case-history", "size": "2 MB" }
-                    ]
-                },
-                {
-                    "id": 7,
-                    "title": "Tensar InterAx Geogrid (NX Series)",
-                    "category": "geogrid",
-                    "subcategory": "InterAx",
-                    "tags": ["interax", "NX", "HX", "geogrid", "terbaru", "next generation", "mining", "heavy duty"],
-                    "description": "Teknologi geogrid generasi terbaru dari Tensar dengan performa lebih tinggi untuk beban berat dan area pertambangan.",
-                    "highlight": true,
-                    "files": [
-                        { "name": "Tensar InterAx Flyer.pdf", "path": "Assets/01. Geogrid/04. InterAx/01. Brosur/Tensar Anatomy w TensarPlus Flyer - MRP - EN.pdf", "type": "brosur", "size": "10.7 MB" },
-                        { "name": "Tensar H Series Flyer.pdf", "path": "Assets/01. Geogrid/04. InterAx/01. Brosur/HX Series/Tensar HSeries Flyer - EN - MRP.pdf", "type": "brosur", "size": "1 MB" }
-                    ]
-                },
-                {
-                    "id": 8,
-                    "title": "Huitex HDPE Geomembrane",
-                    "category": "geomembrane",
-                    "subcategory": null,
-                    "tags": ["geomembrane", "HDPE", "huitex", "lining", "kolam", "limbah", "tambak", "landfill", "kedap air"],
-                    "description": "Lapisan kedap air (impermeable liner) untuk kolam limbah, penampungan air, tambak, dan aplikasi landfill.",
-                    "files": [
-                        { "name": "Brosur Geomembrane Huitex.pdf", "path": "Assets/02. Geomembrane/01. Brosur/Brosur Geomembrane Huitex.pdf", "type": "brosur", "size": "0.4 MB" },
-                        { "name": "Brosur Geomembrane Huitex Complete.pdf", "path": "Assets/02. Geomembrane/01. Brosur/Brosur Geomembrane Huitex-Complete.pdf", "type": "brosur", "size": "10.8 MB" },
-                        { "name": "Spesifikasi HDPE Smooth.pdf", "path": "Assets/02. Geomembrane/02. Spesifikasi/Huitex HDPE Geomembrane Smooth Specification.pdf", "type": "spesifikasi", "size": "0.04 MB" },
-                        { "name": "Metode Pemasangan Geomembrane.pdf", "path": "Assets/02. Geomembrane/08. Metode Pemasangan/Geomembrane Installation Reference Manual.pdf", "type": "metode", "size": "0.9 MB" }
-                    ]
-                },
-                {
-                    "id": 9,
-                    "title": "Geotextile Non-Woven",
-                    "category": "geotextile",
-                    "subcategory": null,
-                    "tags": ["geotextile", "non woven", "PET", "PP", "separator", "filter", "kain", "penyaring"],
-                    "description": "Material pemisah dan penyaring (separator & filtration) berbahan polyester (PET) atau polypropylene (PP).",
-                    "files": [
-                        { "name": "Datasheet Geotextile Non Woven PET.pdf", "path": "Assets/03. Geotextile/02. Spesifikasi/Datasheet Geotextile Non Woven PET.pdf", "type": "spesifikasi", "size": "0.4 MB" },
-                        { "name": "Datasheet Geotextile Non Woven PP.pdf", "path": "Assets/03. Geotextile/02. Spesifikasi/Datasheet Geotextile Non Woven PP.pdf", "type": "spesifikasi", "size": "0.2 MB" }
-                    ]
-                },
-                {
-                    "id": 10,
-                    "title": "Multiblock Retaining Wall System",
-                    "category": "retaining-wall",
-                    "subcategory": "Multiblock",
-                    "tags": ["multiblock", "MBS", "dinding penahan", "retaining wall", "beton", "modular", "blok"],
-                    "description": "Sistem dinding penahan tanah menggunakan modular blok beton dan perkuatan Geogrid Uniaxial RE Series.",
-                    "highlight": true,
-                    "files": [
-                        { "name": "Brosur Multiblock Retaining Wall.pdf", "path": "Assets/04. Retaining Wall/01. Multiblock Retaining Wall System/01. Brosur/Brosur Tensar untuk Multiblock Retaining Wall System.pdf", "type": "brosur", "size": "2.3 MB" },
-                        { "name": "Presentasi Multiblock (PDF).pdf", "path": "Assets/09. Presentasi/PDF/MULTIBLOCK RETAINING WALL SYSTEM.pdf", "type": "presentasi", "size": "6.9 MB" }
-                    ]
-                },
-                {
-                    "id": 11,
-                    "title": "SierraScape Retaining Wall System",
-                    "category": "retaining-wall",
-                    "subcategory": "SierraScape",
-                    "tags": ["sierrascape", "sierra", "wire", "kawat", "mesh", "vegetasi", "hijau", "green wall", "lereng"],
-                    "description": "Sistem dinding penahan tanah kawat (wire mesh) yang bisa ditanami vegetasi atau diisi batu pecah.",
-                    "files": [
-                        { "name": "Brosur SierraScape.pdf", "path": "Assets/04. Retaining Wall/02. Sierrascape Retaining Wall System/01. Brosur/Sierra Scape Retaining Wall System Brosur.pdf", "type": "brosur", "size": "7.2 MB" },
-                        { "name": "Presentasi SierraScape (PDF).pdf", "path": "Assets/09. Presentasi/PDF/PPT SIERRASCAPE RETANING WALL SYSTEM - MULTIBANGUN.pdf", "type": "presentasi", "size": "4.3 MB" }
-                    ]
-                },
-                {
-                    "id": 12,
-                    "title": "V-Max Erosion Control",
-                    "category": "erosion-control",
-                    "subcategory": null,
-                    "tags": ["vmax", "V-Max", "erosi", "erosion", "control", "TRM", "mat", "sungai", "lereng", "saluran"],
-                    "description": "Solusi turf reinforcement mat untuk mencegah erosi pada lereng timbunan, galian, dan saluran air.",
-                    "files": [
-                        { "name": "Brosur Tensar V-Max.pdf", "path": "Assets/08. VMAX/Brosur Tensar untuk Kontrol Erosi V-Max.pdf", "type": "brosur", "size": "2 MB" },
-                        { "name": "Pedoman Instalasi V-Max C350.pdf", "path": "Assets/08. VMAX/08. Metode Pemasangan/Pedoman Instalasi Tensar Vmax C350.pdf", "type": "metode", "size": "0.6 MB" }
-                    ]
-                },
-                {
-                    "id": 13,
-                    "title": "Huitex Geocell",
-                    "category": "geocell",
-                    "subcategory": null,
-                    "tags": ["geocell", "huitex", "honeycomb", "sarang lebah", "slope", "retaining wall", "stabilisasi"],
-                    "description": "Sistem geocell berbentuk sarang lebah untuk stabilisasi lereng, ground stabilization, dan dinding penahan.",
-                    "files": [
-                        { "name": "Brosur Geocell.pdf", "path": "Assets/10. Geocell/Brosur Geocell/Geocell Brochure.pdf", "type": "brosur", "size": "2.9 MB" },
-                        { "name": "Spesifikasi Geocell.pdf", "path": "Assets/10. Geocell/Brosur Geocell/Spesification Geocell_type.pdf", "type": "spesifikasi", "size": "0.1 MB" },
-                        { "name": "Instalasi Geocell - Ground Stabilization.pdf", "path": "Assets/10. Geocell/Brosur Geocell/HUITEX Geocell installation Reference for Ground Stabiliz..pdf", "type": "metode", "size": "0.3 MB" }
-                    ]
-                },
-                {
-                    "id": 14,
-                    "title": "HX-AE Asphalt Reinforcement",
-                    "category": "asphalt",
-                    "subcategory": null,
-                    "tags": ["HX-AE", "asphalt", "aspal", "reinforcement", "overlay", "jalan", "retak", "crack"],
-                    "description": "Geogrid untuk perkuatan lapisan aspal dan mencegah reflective cracking pada jalan overlay.",
-                    "files": [
-                        { "name": "Brosur HX-AE Asphalt.pdf", "path": "Assets/11. HX-AE Asphalt Reinforcement/HX-AE -Asphalt-Flyer.pdf", "type": "brosur", "size": "5.8 MB" },
-                        { "name": "Technical Note HX-AE.pdf", "path": "Assets/11. HX-AE Asphalt Reinforcement/TN_HX-AE.pdf", "type": "spesifikasi", "size": "0.09 MB" }
-                    ]
-                },
-                {
-                    "id": 15,
-                    "title": "Presentasi Geosintetik Konstruksi",
-                    "category": "presentasi",
-                    "subcategory": null,
-                    "tags": ["presentasi", "konstruksi", "aplikasi", "overview", "geosintetik"],
-                    "description": "Presentasi komprehensif tentang aplikasi geosintetik pada berbagai proyek konstruksi.",
-                    "files": [{ "name": "Aplikasi Geosintetik pada Proyek Konstruksi.pdf", "path": "Assets/09. Presentasi/PDF/APLIKASI GEOSINTETIK PADA PROYEK KONSTRUKSI.pdf", "type": "presentasi", "size": "8.7 MB" }]
-                },
-                {
-                    "id": 16,
-                    "title": "Presentasi Stabilisasi Tanah Dasar",
-                    "category": "presentasi",
-                    "subcategory": null,
-                    "tags": ["presentasi", "stabilisasi", "tanah dasar", "geogrid", "jalan"],
-                    "description": "Presentasi lengkap mengenai teknik stabilisasi tanah dasar menggunakan geogrid.",
-                    "files": [{ "name": "Stabilisasi Tanah Dasar Menggunakan Geogrid.pdf", "path": "Assets/09. Presentasi/PDF/PRESENTASI STABILISASI TANAH DASAR MENGGUNAKAN GEOGRID.pdf", "type": "presentasi", "size": "10.1 MB" }]
-                },
-                {
-                    "id": 17,
-                    "title": "Presentasi HDPE Geomembrane",
-                    "category": "presentasi",
-                    "subcategory": null,
-                    "tags": ["presentasi", "geomembrane", "HDPE", "lining", "kolam"],
-                    "description": "Presentasi detail tentang aplikasi dan instalasi HDPE Geomembrane.",
-                    "files": [{ "name": "Presentasi HDPE Geomembrane.pdf", "path": "Assets/09. Presentasi/PDF/PRESENTASI HDPE GEOMEMBRANE.pdf", "type": "presentasi", "size": "3.9 MB" }]
-                },
-                {
-                    "id": 18,
-                    "title": "Solusi Kawasan Industri",
-                    "category": "presentasi",
-                    "subcategory": null,
-                    "tags": ["industri", "pabrik", "gudang", "kawasan", "industrial", "estate"],
-                    "description": "Presentasi solusi geosintetik untuk pengembangan kawasan industri dan pergudangan.",
-                    "files": [{ "name": "Solusi Geosintetik Kawasan Industri.pdf", "path": "Assets/09. Presentasi/PDF/Presentasi Solusi Geosintetik Kawasan Industri.pdf", "type": "presentasi", "size": "2.4 MB" }]
-                },
-                {
-                    "id": 19,
-                    "title": "Aplikasi Pertambangan",
-                    "category": "presentasi",
-                    "subcategory": null,
-                    "tags": ["tambang", "mining", "hauling", "road", "batu bara", "coal", "pertambangan"],
-                    "description": "Presentasi penerapan teknologi geosintetik untuk efisiensi infrastruktur pertambangan.",
-                    "files": [{ "name": "Aplikasi Geosintetik untuk Area Pertambangan.pdf", "path": "Assets/09. Presentasi/PDF/TN_APLIKASI GEOSINTETIK UNTUK AREA PERTAMBANGAN.pdf", "type": "presentasi", "size": "44.9 MB" }]
-                }
-            ]
+        // ==================== GITHUB ADMIN INTEGRATION ====================
+
+        const GITHUB_CONFIG = {
+            OWNER: 'krisandi89',
+            REPO: 'multibangun-smart-database',
+            BRANCH: 'main'
         };
+
+        class GithubService {
+            constructor(token) {
+                this.token = token;
+                this.baseUrl = `https://api.github.com/repos/${GITHUB_CONFIG.OWNER}/${GITHUB_CONFIG.REPO}`;
+            }
+
+            async getHeaders() {
+                return {
+                    'Authorization': `token ${this.token}`,
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Content-Type': 'application/json',
+                };
+            }
+
+            async getFile(path) {
+                const response = await fetch(`${this.baseUrl}/contents/${path}?ref=${GITHUB_CONFIG.BRANCH}`, {
+                    headers: await this.getHeaders()
+                });
+                if (!response.ok) throw new Error('Gagal membaca file dari GitHub');
+                return await response.json();
+            }
+
+            async uploadFile(path, contentBase64, message) {
+                // Check if file exists to get SHA (for update) or null (for create)
+                let sha = null;
+                try {
+                    const existing = await this.getFile(path);
+                    sha = existing.sha;
+                } catch (e) {
+                    // File doesn't exist, proceed with create
+                }
+
+                const body = {
+                    message: message,
+                    content: contentBase64,
+                    branch: GITHUB_CONFIG.BRANCH
+                };
+                if (sha) body.sha = sha;
+
+                const response = await fetch(`${this.baseUrl}/contents/${path}`, {
+                    method: 'PUT',
+                    headers: await this.getHeaders(),
+                    body: JSON.stringify(body)
+                });
+
+                if (!response.ok) throw new Error('Gagal upload file ke GitHub');
+                return await response.json();
+            }
+
+            async updateDataJson(newItem) {
+                const fileData = await this.getFile('data.json');
+                const content = JSON.parse(atob(fileData.content));
+
+                // Add new item
+                content.items.push(newItem);
+
+                // Convert back to Base64
+                const newContent = btoa(JSON.stringify(content, null, 2)); // Pretty print
+
+                await this.uploadFile('data.json', newContent, `Add product: ${newItem.title}`);
+                return true;
+            }
+        }
+
+        const AdminModal = ({ isOpen, onClose, categories, onUploadSuccess }) => {
+            const [step, setStep] = useState('token'); // token, form, uploading, success
+            const [token, setToken] = useState(localStorage.getItem('gh_token') || '');
+            const [formData, setFormData] = useState({
+                title: '',
+                category: '',
+                description: '',
+                file: null
+            });
+            const [logs, setLogs] = useState([]);
+
+            const addLog = (msg) => setLogs(prev => [...prev, msg]);
+
+            const handleSaveToken = () => {
+                if (token) {
+                    localStorage.setItem('gh_token', token);
+                    setStep('form');
+                }
+            };
+
+            const handleFileChange = (e) => {
+                if (e.target.files[0]) {
+                    setFormData({ ...formData, file: e.target.files[0] });
+                }
+            };
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                setStep('uploading');
+                setLogs([]);
+                addLog('🔄 Memulai proses upload...');
+
+                try {
+                    const gh = new GithubService(token);
+
+                    // 1. Read File & Convert to Base64
+                    addLog('📂 Membaca file PDF...');
+                    const reader = new FileReader();
+                    reader.readAsDataURL(formData.file);
+
+                    reader.onload = async () => {
+                        try {
+                            const base64Content = reader.result.split(',')[1];
+
+                            // 2. Upload PDF
+                            const filePath = `Assets/New/${formData.file.name}`; // Simplified path for auto-upload
+                            addLog(`⬆️ Mengupload PDF ke: ${filePath}`);
+
+                            await gh.uploadFile(filePath, base64Content, `Upload asset: ${formData.file.name}`);
+                            addLog('✅ PDF berhasil diupload!');
+
+                            // 3. Update data.json
+                            addLog('📝 Mengupdate database...');
+                            const newItem = {
+                                id: Date.now(), // Use timestamp as simple ID
+                                title: formData.title,
+                                category: formData.category,
+                                subcategory: null,
+                                tags: ["new", formData.category],
+                                description: formData.description,
+                                highlight: false,
+                                files: [{
+                                    name: formData.file.name,
+                                    path: filePath,
+                                    type: 'brosur', // Default
+                                    size: (formData.file.size / 1024 / 1024).toFixed(1) + ' MB',
+                                    gdriveId: '' // None for direct github upload
+                                }]
+                            };
+
+                            await gh.updateDataJson(newItem);
+                            addLog('✅ Database berhasil diupdate!');
+                            addLog('🎉 Selesai! Tunggu Vercel deploy 1-2 menit.');
+
+                            setTimeout(() => {
+                                onUploadSuccess();
+                                onClose();
+                                setStep('form');
+                                setFormData({ title: '', category: '', description: '', file: null });
+                            }, 2000);
+
+                        } catch (error) {
+                            addLog(`❌ Error: ${error.message}`);
+                        }
+                    };
+
+                } catch (error) {
+                    addLog(`❌ Error sistem: ${error.message}`);
+                }
+            };
+
+            if (!isOpen) return null;
+
+            return (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+                    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]">
+                        {/* Header */}
+                        <div className="p-4 border-b dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-900">
+                            <h3 className="font-bold text-lg">⚙️ Admin Mode</h3>
+                            <button onClick={onClose}><Icons.X className="w-6 h-6" /></button>
+                        </div>
+
+                        {/* Content */}
+                        <div className="p-6 overflow-y-auto">
+                            {step === 'token' && (
+                                <div className="space-y-4">
+                                    <p className="text-sm">Masukkan GitHub Personal Access Token (PAT) untuk izin upload.</p>
+                                    <input
+                                        type="password"
+                                        value={token}
+                                        onChange={e => setToken(e.target.value)}
+                                        placeholder="ghp_xxxxxxxxxxxx"
+                                        className="w-full p-3 rounded-lg border dark:bg-slate-700 dark:border-slate-600"
+                                    />
+                                    <button onClick={handleSaveToken} className="w-full py-3 bg-blue-600 text-white rounded-lg font-bold">Lanjut</button>
+                                    <p className="text-xs text-slate-400 mt-2">*Token akan disimpan di browser Anda.</p>
+                                </div>
+                            )}
+
+                            {step === 'form' && (
+                                <form onSubmit={handleSubmit} className="space-y-4">
+                                    <div>
+                                        <label className="block text-xs font-bold uppercase mb-1">Nama Produk</label>
+                                        <input required className="w-full p-2 rounded border dark:bg-slate-700 dark:border-slate-600"
+                                            value={formData.title} onChange={e => setFormData({ ...formData, title: e.target.value })} />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold uppercase mb-1">Kategori</label>
+                                        <select required className="w-full p-2 rounded border dark:bg-slate-700 dark:border-slate-600"
+                                            value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value })}>
+                                            <option value="">Pilih Kategori...</option>
+                                            {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold uppercase mb-1">Deskripsi</label>
+                                        <textarea required className="w-full p-2 rounded border dark:bg-slate-700 dark:border-slate-600" rows="3"
+                                            value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })}></textarea>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold uppercase mb-1">File PDF (&lt; 50MB)</label>
+                                        <div className="border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-6 text-center hover:bg-slate-50 dark:hover:bg-slate-700 transition cursor-pointer relative">
+                                            <input required type="file" accept=".pdf" onChange={handleFileChange} className="absolute inset-0 opacity-0 cursor-pointer" />
+                                            <Icons.Folder className="w-8 h-8 mx-auto text-slate-400 mb-2" />
+                                            <p className="text-sm font-medium">{formData.file ? formData.file.name : "Klik atau Drag file ke sini"}</p>
+                                        </div>
+                                    </div>
+                                    <button type="submit" className="w-full py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-bold shadow-lg transition-transform hover:scale-[1.02]">
+                                        🚀 Upload & Simpan
+                                    </button>
+                                </form>
+                            )}
+
+                            {step === 'uploading' && (
+                                <div className="space-y-3">
+                                    <div className="flex justify-center mb-4">
+                                        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
+                                    </div>
+                                    <h4 className="text-center font-bold">Sedang Memproses...</h4>
+                                    <div className="bg-slate-100 dark:bg-slate-900 p-3 rounded-lg font-mono text-xs space-y-1">
+                                        {logs.map((log, i) => <div key={i}>{log}</div>)}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+
+
+
 
         // ==================== MAIN APP ====================
         const MultibangunSmartDatabase = () => {
             const [database, setDatabase] = useState({ categories: [], items: [] });
+
+            // Admin State
+            const [isAdminOpen, setIsAdminOpen] = useState(false);
+
+            const handleUploadSuccess = () => {
+                setIsLoading(true);
+                // Reload data to reflect changes
+                setTimeout(() => {
+                    fetch(`data.json?t=${new Date().getTime()}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            setDatabase(data);
+                            setResults(data.items);
+                            setIsLoading(false);
+                        });
+                }, 1500);
+            };
+
             const [query, setQuery] = useState('');
             const [activeCategory, setActiveCategory] = useState('all');
             const [results, setResults] = useState([]);
@@ -845,6 +867,27 @@
 
             return (
                 <div className="min-h-screen">
+
+                    {/* Admin Modal */}
+                    <AdminModal
+                        isOpen={isAdminOpen}
+                        onClose={() => setIsAdminOpen(false)}
+                        categories={database.categories}
+                        onUploadSuccess={handleUploadSuccess}
+                    />
+
+                    {/* Admin Toggle (Gear Icon) */}
+                    <button
+                        onClick={() => setIsAdminOpen(true)}
+                        className="fixed top-4 right-16 z-40 p-2 rounded-lg bg-white/80 dark:bg-slate-800/80 backdrop-blur border border-slate-200 dark:border-slate-700 shadow-sm hover:scale-105 transition-all group"
+                        title="Admin & Upload"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-slate-500 group-hover:text-blue-600 dark:text-slate-400 dark:group-hover:text-blue-400 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                    </button>
+
 
                     {/* Theme Toggle */}
                     <button

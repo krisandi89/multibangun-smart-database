@@ -868,6 +868,27 @@
           "gdriveId": "1-t85UBDf8YO3cLmmUNU_ZaAzAHwH0zNU"
         }
       ]
+    },
+    {
+      "id": 1768814302104,
+      "title": "Tensar TriAx",
+      "category": "geogrid",
+      "subcategory": null,
+      "tags": [
+        "new",
+        "geogrid"
+      ],
+      "description": "Case History Access Road Kuala Pembuang",
+      "highlight": false,
+      "files": [
+        {
+          "name": "CS Access Road Kuala Pembuang.pdf",
+          "path": "Assets/New/CS Access Road Kuala Pembuang.pdf",
+          "type": "brosur",
+          "size": "1.8 MB",
+          "gdriveId": ""
+        }
+      ]
     }
   ]
 }

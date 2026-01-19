@@ -841,6 +841,33 @@
           "gdriveId": "1TTulwjqfNyakvSP1_gDmdOLcvL6J3Q13"
         }
       ]
+    },
+    {
+      "id": 20,
+      "title": "Case History RAPP Geogrid Biaxial - Riau",
+      "category": "geogrid",
+      "subcategory": "Biaxial",
+      "tags": [
+        "case history",
+        "biaxial",
+        "geogrid",
+        "rapp",
+        "riau",
+        "gambut",
+        "stabilisasi",
+        "jalan"
+      ],
+      "description": "Studi kasus penggunaan Geogrid Biaxial untuk stabilisasi tanah gambut pada proyek jalan akses RAPP di Riau.",
+      "highlight": false,
+      "files": [
+        {
+          "name": "CASE HISTORY RAPP Geogrid Biaxial - Riau.pdf",
+          "path": "Assets/01. Geogrid/02. Biaxial/06. Case History/CASE HISTORY RAPP Geogrid Biaxial - Riau.pdf",
+          "type": "case-history",
+          "size": "1 MB",
+          "gdriveId": "1-t85UBDf8YO3cLmmUNU_ZaAzAHwH0zNU"
+        }
+      ]
     }
   ]
 }

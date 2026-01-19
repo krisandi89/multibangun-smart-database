@@ -750,7 +750,8 @@
 
             // Load database from data.json
             useEffect(() => {
-                fetch('data.json')
+                // Add timestamp to prevent caching
+                fetch(`data.json?t=${new Date().getTime()}`)
                     .then(res => res.json())
                     .then(data => {
                         setDatabase(data);

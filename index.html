@@ -502,14 +502,11 @@
             }
 
             async uploadFile(path, contentBase64, message) {
-                // Check if file exists to get SHA (for update) or null (for create)
                 let sha = null;
                 try {
                     const existing = await this.getFile(path);
                     sha = existing.sha;
-                } catch (e) {
-                    // File doesn't exist, proceed with create
-                }
+                } catch (e) { }
 
                 const body = {
                     message: message,
@@ -531,36 +528,119 @@
             async updateDataJson(newItem) {
                 const fileData = await this.getFile('data.json');
                 const content = JSON.parse(atob(fileData.content));
-
-                // Add new item
                 content.items.push(newItem);
-
-                // Convert back to Base64
-                const newContent = btoa(JSON.stringify(content, null, 2)); // Pretty print
-
+                const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2))));
                 await this.uploadFile('data.json', newContent, `Add product: ${newItem.title}`);
-                return true;
+                return content;
+            }
+
+            async addFileToExistingProduct(productId, newFile) {
+                const fileData = await this.getFile('data.json');
+                const content = JSON.parse(atob(fileData.content));
+                const itemIndex = content.items.findIndex(item => item.id === productId);
+                if (itemIndex === -1) throw new Error('Produk tidak ditemukan');
+                content.items[itemIndex].files.push(newFile);
+                const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2))));
+                await this.uploadFile('data.json', newContent, `Add file to: ${content.items[itemIndex].title}`);
+                return content;
+            }
+
+            async deleteProduct(productId) {
+                const fileData = await this.getFile('data.json');
+                const content = JSON.parse(atob(fileData.content));
+                const itemIndex = content.items.findIndex(item => item.id === productId);
+                if (itemIndex === -1) throw new Error('Produk tidak ditemukan');
+                const deletedTitle = content.items[itemIndex].title;
+                content.items.splice(itemIndex, 1);
+                const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2))));
+                await this.uploadFile('data.json', newContent, `Delete product: ${deletedTitle}`);
+                return content;
+            }
+
+            async deleteFile(productId, fileIndex) {
+                const fileData = await this.getFile('data.json');
+                const content = JSON.parse(atob(fileData.content));
+                const itemIndex = content.items.findIndex(item => item.id === productId);
+                if (itemIndex === -1) throw new Error('Produk tidak ditemukan');
+                const deletedFileName = content.items[itemIndex].files[fileIndex]?.name || 'file';
+                content.items[itemIndex].files.splice(fileIndex, 1);
+                // If no files left, keep product but with empty files array
+                const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2))));
+                await this.uploadFile('data.json', newContent, `Delete file: ${deletedFileName}`);
+                return content;
+            }
+
+            async getDataJson() {
+                const fileData = await this.getFile('data.json');
+                return JSON.parse(atob(fileData.content));
             }
         }
 
-        const AdminModal = ({ isOpen, onClose, categories, onUploadSuccess }) => {
-            const [step, setStep] = useState('token'); // token, form, uploading, success
+        // Delete Confirmation Modal
+        const DeleteConfirmModal = ({ isOpen, onClose, onConfirm, itemName, isDeleting }) => {
+            if (!isOpen) return null;
+            return (
+                <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+                    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-sm p-6">
+                        <div className="text-center mb-4">
+                            <div className="w-14 h-14 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mx-auto mb-3">
+                                <svg className="w-7 h-7 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </div>
+                            <h4 className="font-bold text-lg mb-2">Hapus Item?</h4>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">
+                                Anda akan menghapus: <strong className="text-slate-700 dark:text-slate-200">{itemName}</strong>
+                            </p>
+                            <p className="text-xs text-red-500 mt-2">Tindakan ini tidak dapat dibatalkan!</p>
+                        </div>
+                        <div className="flex gap-3">
+                            <button onClick={onClose} disabled={isDeleting} className="flex-1 py-2.5 px-4 rounded-lg border border-slate-300 dark:border-slate-600 font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition disabled:opacity-50">
+                                Batal
+                            </button>
+                            <button onClick={onConfirm} disabled={isDeleting} className="flex-1 py-2.5 px-4 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium transition disabled:opacity-50 flex items-center justify-center gap-2">
+                                {isDeleting ? (
+                                    <><div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div> Menghapus...</>
+                                ) : '🗑️ Hapus'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const AdminModal = ({ isOpen, onClose, categories, items, onUploadSuccess }) => {
+            const [activeTab, setActiveTab] = useState('upload'); // upload, manage
+            const [step, setStep] = useState('token'); // token, main, uploading
             const [token, setToken] = useState(localStorage.getItem('gh_token') || '');
+            const [uploadMode, setUploadMode] = useState('new'); // new, existing
+            const [selectedProduct, setSelectedProduct] = useState('');
             const [formData, setFormData] = useState({
                 title: '',
                 category: '',
                 description: '',
+                fileType: 'brosur',
                 file: null
             });
             const [logs, setLogs] = useState([]);
+            const [manageSearch, setManageSearch] = useState('');
+            const [expandedProduct, setExpandedProduct] = useState(null);
+            const [deleteModal, setDeleteModal] = useState({ open: false, type: '', productId: null, fileIndex: null, name: '' });
+            const [isDeleting, setIsDeleting] = useState(false);
 
             const addLog = (msg) => setLogs(prev => [...prev, msg]);
 
             const handleSaveToken = () => {
                 if (token) {
                     localStorage.setItem('gh_token', token);
-                    setStep('form');
+                    setStep('main');
                 }
+            };
+
+            const handleLogout = () => {
+                localStorage.removeItem('gh_token');
+                setToken('');
+                setStep('token');
             };
 
             const handleFileChange = (e) => {
@@ -577,139 +657,336 @@
 
                 try {
                     const gh = new GithubService(token);
-
-                    // 1. Read File & Convert to Base64
-                    addLog('📂 Membaca file PDF...');
+                    addLog('📂 Membaca file...');
                     const reader = new FileReader();
                     reader.readAsDataURL(formData.file);
 
                     reader.onload = async () => {
                         try {
                             const base64Content = reader.result.split(',')[1];
+                            const filePath = `Assets/New/${formData.file.name}`;
+                            addLog(`⬆️ Mengupload file ke: ${filePath}`);
+                            await gh.uploadFile(filePath, base64Content, `Upload: ${formData.file.name}`);
+                            addLog('✅ File berhasil diupload!');
 
-                            // 2. Upload PDF
-                            const filePath = `Assets/New/${formData.file.name}`; // Simplified path for auto-upload
-                            addLog(`⬆️ Mengupload PDF ke: ${filePath}`);
-
-                            await gh.uploadFile(filePath, base64Content, `Upload asset: ${formData.file.name}`);
-                            addLog('✅ PDF berhasil diupload!');
-
-                            // 3. Update data.json
-                            addLog('📝 Mengupdate database...');
-                            const newItem = {
-                                id: Date.now(), // Use timestamp as simple ID
-                                title: formData.title,
-                                category: formData.category,
-                                subcategory: null,
-                                tags: ["new", formData.category],
-                                description: formData.description,
-                                highlight: false,
-                                files: [{
-                                    name: formData.file.name,
-                                    path: filePath,
-                                    type: 'brosur', // Default
-                                    size: (formData.file.size / 1024 / 1024).toFixed(1) + ' MB',
-                                    gdriveId: '' // None for direct github upload
-                                }]
+                            const newFile = {
+                                name: formData.file.name,
+                                path: filePath,
+                                type: formData.fileType,
+                                size: (formData.file.size / 1024 / 1024).toFixed(1) + ' MB',
+                                gdriveId: ''
                             };
 
-                            await gh.updateDataJson(newItem);
-                            addLog('✅ Database berhasil diupdate!');
-                            addLog('🎉 Selesai! Tunggu Vercel deploy 1-2 menit.');
+                            if (uploadMode === 'existing' && selectedProduct) {
+                                addLog('📝 Menambahkan file ke produk existing...');
+                                await gh.addFileToExistingProduct(parseInt(selectedProduct), newFile);
+                                addLog('✅ File ditambahkan ke produk!');
+                            } else {
+                                addLog('📝 Membuat produk baru...');
+                                const newItem = {
+                                    id: Date.now(),
+                                    title: formData.title,
+                                    category: formData.category,
+                                    subcategory: null,
+                                    tags: ["new", formData.category],
+                                    description: formData.description,
+                                    highlight: false,
+                                    files: [newFile]
+                                };
+                                await gh.updateDataJson(newItem);
+                                addLog('✅ Produk baru dibuat!');
+                            }
 
+                            addLog('🎉 Selesai! Tunggu Vercel deploy 1-2 menit.');
                             setTimeout(() => {
                                 onUploadSuccess();
                                 onClose();
-                                setStep('form');
-                                setFormData({ title: '', category: '', description: '', file: null });
+                                setStep('main');
+                                setFormData({ title: '', category: '', description: '', fileType: 'brosur', file: null });
+                                setUploadMode('new');
+                                setSelectedProduct('');
                             }, 2000);
-
                         } catch (error) {
                             addLog(`❌ Error: ${error.message}`);
                         }
                     };
-
                 } catch (error) {
                     addLog(`❌ Error sistem: ${error.message}`);
                 }
             };
 
+            const handleDelete = async () => {
+                setIsDeleting(true);
+                try {
+                    const gh = new GithubService(token);
+                    if (deleteModal.type === 'product') {
+                        await gh.deleteProduct(deleteModal.productId);
+                    } else {
+                        await gh.deleteFile(deleteModal.productId, deleteModal.fileIndex);
+                    }
+                    setDeleteModal({ open: false, type: '', productId: null, fileIndex: null, name: '' });
+                    onUploadSuccess();
+                } catch (error) {
+                    alert('Gagal menghapus: ' + error.message);
+                }
+                setIsDeleting(false);
+            };
+
+            const filteredItems = items.filter(item =>
+                item.title.toLowerCase().includes(manageSearch.toLowerCase()) ||
+                item.category.toLowerCase().includes(manageSearch.toLowerCase())
+            );
+
+            const getStorageIcon = (file) => {
+                if (file.gdriveId && file.gdriveId !== '') return '☁️';
+                return '📁';
+            };
+
             if (!isOpen) return null;
 
             return (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
-                    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]">
-                        {/* Header */}
-                        <div className="p-4 border-b dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-900">
-                            <h3 className="font-bold text-lg">⚙️ Admin Mode</h3>
-                            <button onClick={onClose}><Icons.X className="w-6 h-6" /></button>
-                        </div>
+                <>
+                    <DeleteConfirmModal
+                        isOpen={deleteModal.open}
+                        onClose={() => setDeleteModal({ open: false, type: '', productId: null, fileIndex: null, name: '' })}
+                        onConfirm={handleDelete}
+                        itemName={deleteModal.name}
+                        isDeleting={isDeleting}
+                    />
 
-                        {/* Content */}
-                        <div className="p-6 overflow-y-auto">
-                            {step === 'token' && (
-                                <div className="space-y-4">
-                                    <p className="text-sm">Masukkan GitHub Personal Access Token (PAT) untuk izin upload.</p>
-                                    <input
-                                        type="password"
-                                        value={token}
-                                        onChange={e => setToken(e.target.value)}
-                                        placeholder="ghp_xxxxxxxxxxxx"
-                                        className="w-full p-3 rounded-lg border dark:bg-slate-700 dark:border-slate-600"
-                                    />
-                                    <button onClick={handleSaveToken} className="w-full py-3 bg-blue-600 text-white rounded-lg font-bold">Lanjut</button>
-                                    <p className="text-xs text-slate-400 mt-2">*Token akan disimpan di browser Anda.</p>
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+                        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
+                            {/* Header */}
+                            <div className="p-4 border-b dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-900">
+                                <h3 className="font-bold text-lg">⚙️ Admin Mode</h3>
+                                <div className="flex items-center gap-2">
+                                    {step === 'main' && (
+                                        <button onClick={handleLogout} className="text-xs text-slate-500 hover:text-red-500 transition">Logout</button>
+                                    )}
+                                    <button onClick={onClose}><Icons.X className="w-6 h-6" /></button>
                                 </div>
-                            )}
+                            </div>
 
-                            {step === 'form' && (
-                                <form onSubmit={handleSubmit} className="space-y-4">
-                                    <div>
-                                        <label className="block text-xs font-bold uppercase mb-1">Nama Produk</label>
-                                        <input required className="w-full p-2 rounded border dark:bg-slate-700 dark:border-slate-600"
-                                            value={formData.title} onChange={e => setFormData({ ...formData, title: e.target.value })} />
+                            {/* Content */}
+                            <div className="flex-1 overflow-hidden flex flex-col">
+                                {step === 'token' && (
+                                    <div className="p-6 space-y-4">
+                                        <p className="text-sm">Masukkan GitHub Personal Access Token (PAT) untuk izin kelola database.</p>
+                                        <input
+                                            type="password"
+                                            value={token}
+                                            onChange={e => setToken(e.target.value)}
+                                            placeholder="ghp_xxxxxxxxxxxx"
+                                            className="w-full p-3 rounded-lg border dark:bg-slate-700 dark:border-slate-600"
+                                        />
+                                        <button onClick={handleSaveToken} className="w-full py-3 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 transition">Lanjut</button>
+                                        <p className="text-xs text-slate-400">*Token akan disimpan di browser Anda.</p>
                                     </div>
-                                    <div>
-                                        <label className="block text-xs font-bold uppercase mb-1">Kategori</label>
-                                        <select required className="w-full p-2 rounded border dark:bg-slate-700 dark:border-slate-600"
-                                            value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value })}>
-                                            <option value="">Pilih Kategori...</option>
-                                            {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label className="block text-xs font-bold uppercase mb-1">Deskripsi</label>
-                                        <textarea required className="w-full p-2 rounded border dark:bg-slate-700 dark:border-slate-600" rows="3"
-                                            value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })}></textarea>
-                                    </div>
-                                    <div>
-                                        <label className="block text-xs font-bold uppercase mb-1">File PDF (&lt; 50MB)</label>
-                                        <div className="border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-6 text-center hover:bg-slate-50 dark:hover:bg-slate-700 transition cursor-pointer relative">
-                                            <input required type="file" accept=".pdf" onChange={handleFileChange} className="absolute inset-0 opacity-0 cursor-pointer" />
-                                            <Icons.Folder className="w-8 h-8 mx-auto text-slate-400 mb-2" />
-                                            <p className="text-sm font-medium">{formData.file ? formData.file.name : "Klik atau Drag file ke sini"}</p>
+                                )}
+
+                                {step === 'main' && (
+                                    <>
+                                        {/* Tabs */}
+                                        <div className="flex border-b dark:border-slate-700">
+                                            <button
+                                                onClick={() => setActiveTab('upload')}
+                                                className={`flex-1 py-3 text-sm font-semibold transition-colors ${activeTab === 'upload' ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50 dark:bg-blue-900/20' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
+                                            >
+                                                📤 Upload Produk
+                                            </button>
+                                            <button
+                                                onClick={() => setActiveTab('manage')}
+                                                className={`flex-1 py-3 text-sm font-semibold transition-colors ${activeTab === 'manage' ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50 dark:bg-blue-900/20' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
+                                            >
+                                                🗂️ Kelola Database
+                                            </button>
+                                        </div>
+
+                                        {/* Tab Content */}
+                                        <div className="flex-1 overflow-y-auto p-6">
+                                            {activeTab === 'upload' && (
+                                                <form onSubmit={handleSubmit} className="space-y-4">
+                                                    {/* Upload Mode Toggle */}
+                                                    <div>
+                                                        <label className="block text-xs font-bold uppercase mb-2">Tambah ke</label>
+                                                        <div className="flex gap-2">
+                                                            <button type="button" onClick={() => setUploadMode('new')}
+                                                                className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition ${uploadMode === 'new' ? 'bg-blue-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}>
+                                                                ➕ Produk Baru
+                                                            </button>
+                                                            <button type="button" onClick={() => setUploadMode('existing')}
+                                                                className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition ${uploadMode === 'existing' ? 'bg-blue-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}>
+                                                                📂 Produk Existing
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    {uploadMode === 'existing' && (
+                                                        <div>
+                                                            <label className="block text-xs font-bold uppercase mb-1">Pilih Produk</label>
+                                                            <select required className="w-full p-2 rounded border dark:bg-slate-700 dark:border-slate-600"
+                                                                value={selectedProduct} onChange={e => setSelectedProduct(e.target.value)}>
+                                                                <option value="">Pilih Produk...</option>
+                                                                {items.map(item => (
+                                                                    <option key={item.id} value={item.id}>{item.title} ({categoryConfig[item.category]?.label || item.category})</option>
+                                                                ))}
+                                                            </select>
+                                                        </div>
+                                                    )}
+
+                                                    {uploadMode === 'new' && (
+                                                        <>
+                                                            <div>
+                                                                <label className="block text-xs font-bold uppercase mb-1">Nama Produk</label>
+                                                                <input required className="w-full p-2 rounded border dark:bg-slate-700 dark:border-slate-600"
+                                                                    value={formData.title} onChange={e => setFormData({ ...formData, title: e.target.value })} />
+                                                            </div>
+                                                            <div>
+                                                                <label className="block text-xs font-bold uppercase mb-1">Kategori</label>
+                                                                <select required className="w-full p-2 rounded border dark:bg-slate-700 dark:border-slate-600"
+                                                                    value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value })}>
+                                                                    <option value="">Pilih Kategori...</option>
+                                                                    {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                                                                </select>
+                                                            </div>
+                                                            <div>
+                                                                <label className="block text-xs font-bold uppercase mb-1">Deskripsi</label>
+                                                                <textarea required className="w-full p-2 rounded border dark:bg-slate-700 dark:border-slate-600" rows="2"
+                                                                    value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })}></textarea>
+                                                            </div>
+                                                        </>
+                                                    )}
+
+                                                    {/* File Type */}
+                                                    <div>
+                                                        <label className="block text-xs font-bold uppercase mb-1">Tipe File</label>
+                                                        <select className="w-full p-2 rounded border dark:bg-slate-700 dark:border-slate-600"
+                                                            value={formData.fileType} onChange={e => setFormData({ ...formData, fileType: e.target.value })}>
+                                                            {Object.entries(fileTypeConfig).map(([key, val]) => (
+                                                                <option key={key} value={key}>{val.icon} {val.label}</option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+
+                                                    {/* File Upload */}
+                                                    <div>
+                                                        <label className="block text-xs font-bold uppercase mb-1">File (PDF, max 50MB)</label>
+                                                        <div className="border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-4 text-center hover:bg-slate-50 dark:hover:bg-slate-700 transition cursor-pointer relative">
+                                                            <input required type="file" accept=".pdf,.ppt,.pptx" onChange={handleFileChange} className="absolute inset-0 opacity-0 cursor-pointer" />
+                                                            <Icons.Folder className="w-6 h-6 mx-auto text-slate-400 mb-1" />
+                                                            <p className="text-sm font-medium">{formData.file ? formData.file.name : "Klik atau Drag file"}</p>
+                                                        </div>
+                                                    </div>
+
+                                                    <button type="submit" className="w-full py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-bold shadow-lg transition">
+                                                        🚀 Upload & Simpan
+                                                    </button>
+                                                </form>
+                                            )}
+
+                                            {activeTab === 'manage' && (
+                                                <div className="space-y-4">
+                                                    {/* Search */}
+                                                    <div className="relative">
+                                                        <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                                        <input
+                                                            type="text"
+                                                            value={manageSearch}
+                                                            onChange={e => setManageSearch(e.target.value)}
+                                                            placeholder="Cari produk..."
+                                                            className="w-full pl-9 pr-4 py-2 rounded-lg border dark:bg-slate-700 dark:border-slate-600 text-sm"
+                                                        />
+                                                    </div>
+
+                                                    {/* Stats */}
+                                                    <div className="flex gap-4 text-xs text-slate-500">
+                                                        <span>📦 {items.length} produk</span>
+                                                        <span>📄 {items.reduce((acc, i) => acc + i.files.length, 0)} file</span>
+                                                    </div>
+
+                                                    {/* Product List */}
+                                                    <div className="space-y-2 max-h-[400px] overflow-y-auto">
+                                                        {filteredItems.map(item => (
+                                                            <div key={item.id} className="border dark:border-slate-700 rounded-lg overflow-hidden">
+                                                                {/* Product Header */}
+                                                                <div
+                                                                    className="flex items-center justify-between p-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition"
+                                                                    onClick={() => setExpandedProduct(expandedProduct === item.id ? null : item.id)}
+                                                                >
+                                                                    <div className="flex-1 min-w-0">
+                                                                        <div className="flex items-center gap-2">
+                                                                            <span className={`text-[10px] px-2 py-0.5 rounded-full text-white ${categoryConfig[item.category]?.color || 'bg-slate-500'}`}>
+                                                                                {categoryConfig[item.category]?.label || item.category}
+                                                                            </span>
+                                                                            <span className="text-xs text-slate-400">{item.files.length} file</span>
+                                                                        </div>
+                                                                        <p className="font-medium text-sm mt-1 truncate">{item.title}</p>
+                                                                    </div>
+                                                                    <div className="flex items-center gap-2">
+                                                                        <button
+                                                                            onClick={(e) => { e.stopPropagation(); setDeleteModal({ open: true, type: 'product', productId: item.id, fileIndex: null, name: item.title }); }}
+                                                                            className="p-1.5 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 text-slate-400 hover:text-red-500 transition"
+                                                                            title="Hapus Produk"
+                                                                        >
+                                                                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                                                        </button>
+                                                                        <Icons.ChevronRight className={`w-4 h-4 text-slate-400 transition-transform ${expandedProduct === item.id ? 'rotate-90' : ''}`} />
+                                                                    </div>
+                                                                </div>
+
+                                                                {/* Expanded Files */}
+                                                                {expandedProduct === item.id && (
+                                                                    <div className="border-t dark:border-slate-700 bg-slate-50 dark:bg-slate-900 p-3 space-y-2">
+                                                                        {item.files.map((file, idx) => (
+                                                                            <div key={idx} className="flex items-center justify-between bg-white dark:bg-slate-800 rounded-lg p-2 text-sm">
+                                                                                <div className="flex items-center gap-2 min-w-0 flex-1">
+                                                                                    <span title={file.gdriveId ? 'Google Drive' : 'GitHub'}>{getStorageIcon(file)}</span>
+                                                                                    <span className={`text-[10px] px-1.5 py-0.5 rounded ${fileTypeConfig[file.type]?.badge || 'bg-slate-100'}`}>
+                                                                                        {fileTypeConfig[file.type]?.label || file.type}
+                                                                                    </span>
+                                                                                    <span className="truncate text-xs">{file.name}</span>
+                                                                                </div>
+                                                                                <button
+                                                                                    onClick={() => setDeleteModal({ open: true, type: 'file', productId: item.id, fileIndex: idx, name: file.name })}
+                                                                                    className="p-1 rounded hover:bg-red-100 dark:hover:bg-red-900/30 text-slate-400 hover:text-red-500 transition flex-shrink-0"
+                                                                                    title="Hapus File"
+                                                                                >
+                                                                                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                                                                </button>
+                                                                            </div>
+                                                                        ))}
+                                                                        {item.files.length === 0 && (
+                                                                            <p className="text-xs text-slate-400 text-center py-2">Tidak ada file</p>
+                                                                        )}
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        ))}
+                                                        {filteredItems.length === 0 && (
+                                                            <p className="text-center text-slate-400 py-8">Tidak ada produk ditemukan</p>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </>
+                                )}
+
+                                {step === 'uploading' && (
+                                    <div className="p-6 space-y-3">
+                                        <div className="flex justify-center mb-4">
+                                            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
+                                        </div>
+                                        <h4 className="text-center font-bold">Sedang Memproses...</h4>
+                                        <div className="bg-slate-100 dark:bg-slate-900 p-3 rounded-lg font-mono text-xs space-y-1 max-h-40 overflow-y-auto">
+                                            {logs.map((log, i) => <div key={i}>{log}</div>)}
                                         </div>
                                     </div>
-                                    <button type="submit" className="w-full py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-bold shadow-lg transition-transform hover:scale-[1.02]">
-                                        🚀 Upload & Simpan
-                                    </button>
-                                </form>
-                            )}
-
-                            {step === 'uploading' && (
-                                <div className="space-y-3">
-                                    <div className="flex justify-center mb-4">
-                                        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
-                                    </div>
-                                    <h4 className="text-center font-bold">Sedang Memproses...</h4>
-                                    <div className="bg-slate-100 dark:bg-slate-900 p-3 rounded-lg font-mono text-xs space-y-1">
-                                        {logs.map((log, i) => <div key={i}>{log}</div>)}
-                                    </div>
-                                </div>
-                            )}
+                                )}
+                            </div>
                         </div>
                     </div>
-                </div>
+                </>
             );
         };
 
@@ -876,6 +1153,7 @@
                         isOpen={isAdminOpen}
                         onClose={() => setIsAdminOpen(false)}
                         categories={database.categories}
+                        items={database.items}
                         onUploadSuccess={handleUploadSuccess}
                     />
 

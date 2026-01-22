@@ -625,6 +625,90 @@
                 const fileData = await this.getFile('data.json');
                 return JSON.parse(atob(fileData.content));
             }
+
+            // Category Management
+            async addCategory(newCategory) {
+                const fileData = await this.getFile('data.json');
+                const content = JSON.parse(atob(fileData.content));
+                content.categories.push(newCategory);
+                const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2))));
+                await this.uploadFile('data.json', newContent, `Add category: ${newCategory.name}`);
+                return content;
+            }
+
+            async updateCategory(categoryId, updates) {
+                const fileData = await this.getFile('data.json');
+                const content = JSON.parse(atob(fileData.content));
+                const idx = content.categories.findIndex(c => c.id === categoryId);
+                if (idx === -1) throw new Error('Kategori tidak ditemukan');
+                content.categories[idx] = { ...content.categories[idx], ...updates };
+                const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2))));
+                await this.uploadFile('data.json', newContent, `Update category: ${categoryId}`);
+                return content;
+            }
+
+            async deleteCategory(categoryId) {
+                const fileData = await this.getFile('data.json');
+                const content = JSON.parse(atob(fileData.content));
+                const inUse = content.items.some(item => item.category === categoryId);
+                if (inUse) throw new Error('Kategori masih digunakan oleh produk. Hapus atau pindahkan produk terlebih dahulu.');
+                const idx = content.categories.findIndex(c => c.id === categoryId);
+                if (idx === -1) throw new Error('Kategori tidak ditemukan');
+                content.categories.splice(idx, 1);
+                const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2))));
+                await this.uploadFile('data.json', newContent, `Delete category: ${categoryId}`);
+                return content;
+            }
+
+            // File Type Management
+            async addFileType(newFileType) {
+                const fileData = await this.getFile('data.json');
+                const content = JSON.parse(atob(fileData.content));
+                if (!content.fileTypes) content.fileTypes = [];
+                content.fileTypes.push(newFileType);
+                const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2))));
+                await this.uploadFile('data.json', newContent, `Add file type: ${newFileType.label}`);
+                return content;
+            }
+
+            async updateFileType(fileTypeId, updates) {
+                const fileData = await this.getFile('data.json');
+                const content = JSON.parse(atob(fileData.content));
+                if (!content.fileTypes) throw new Error('File types belum ada');
+                const idx = content.fileTypes.findIndex(f => f.id === fileTypeId);
+                if (idx === -1) throw new Error('Tipe file tidak ditemukan');
+                content.fileTypes[idx] = { ...content.fileTypes[idx], ...updates };
+                const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2))));
+                await this.uploadFile('data.json', newContent, `Update file type: ${fileTypeId}`);
+                return content;
+            }
+
+            async deleteFileType(fileTypeId) {
+                const fileData = await this.getFile('data.json');
+                const content = JSON.parse(atob(fileData.content));
+                if (!content.fileTypes) throw new Error('File types belum ada');
+                // Check if file type is in use
+                const inUse = content.items.some(item => item.files.some(f => f.type === fileTypeId));
+                if (inUse) throw new Error('Tipe file masih digunakan. Hapus atau ubah file yang menggunakan tipe ini terlebih dahulu.');
+                const idx = content.fileTypes.findIndex(f => f.id === fileTypeId);
+                if (idx === -1) throw new Error('Tipe file tidak ditemukan');
+                content.fileTypes.splice(idx, 1);
+                const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2))));
+                await this.uploadFile('data.json', newContent, `Delete file type: ${fileTypeId}`);
+                return content;
+            }
+
+            // Product Update
+            async updateProduct(productId, updates) {
+                const fileData = await this.getFile('data.json');
+                const content = JSON.parse(atob(fileData.content));
+                const idx = content.items.findIndex(item => item.id === productId);
+                if (idx === -1) throw new Error('Produk tidak ditemukan');
+                content.items[idx] = { ...content.items[idx], ...updates };
+                const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2))));
+                await this.uploadFile('data.json', newContent, `Update product: ${content.items[idx].title}`);
+                return content;
+            }
         }
 
         // Delete Confirmation Modal
@@ -660,8 +744,8 @@
             );
         };
 
-        const AdminModal = ({ isOpen, onClose, categories, items, onUploadSuccess }) => {
-            const [activeTab, setActiveTab] = useState('upload'); // upload, manage
+        const AdminModal = ({ isOpen, onClose, categories, fileTypes, items, onUploadSuccess }) => {
+            const [activeTab, setActiveTab] = useState('upload'); // upload, manage, settings
             const [step, setStep] = useState('token'); // token, validating, main, uploading
             const [token, setToken] = useState(localStorage.getItem('gh_token') || '');
             const [uploadMode, setUploadMode] = useState('new'); // new, existing
@@ -679,6 +763,32 @@
             const [deleteModal, setDeleteModal] = useState({ open: false, type: '', productId: null, fileIndex: null, name: '' });
             const [isDeleting, setIsDeleting] = useState(false);
             const [error, setError] = useState('');
+
+            // Settings state
+            const [settingsTab, setSettingsTab] = useState('categories'); // categories, fileTypes
+            const [newCategory, setNewCategory] = useState({ id: '', name: '', color: 'bg-blue-600' });
+            const [newFileType, setNewFileType] = useState({ id: '', label: '', icon: '📄', badge: 'badge-brosur' });
+            const [isProcessing, setIsProcessing] = useState(false);
+
+            // Edit Product state
+            const [editProduct, setEditProduct] = useState(null);
+            const [editFormData, setEditFormData] = useState({ title: '', description: '', category: '' });
+
+            // Quick-add modal state
+            const [quickAddModal, setQuickAddModal] = useState({ open: false, type: '' }); // type: 'category' or 'fileType'
+
+            // Color options for categories
+            const colorOptions = [
+                'bg-slate-600', 'bg-blue-600', 'bg-emerald-600', 'bg-purple-600',
+                'bg-amber-600', 'bg-green-600', 'bg-orange-600', 'bg-cyan-600',
+                'bg-rose-600', 'bg-indigo-600', 'bg-pink-600', 'bg-teal-600'
+            ];
+
+            // Badge options for file types
+            const badgeOptions = [
+                'badge-brosur', 'badge-spesifikasi', 'badge-metode', 'badge-hasil-uji',
+                'badge-sertifikasi', 'badge-case-history', 'badge-presentasi'
+            ];
 
             const addLog = (msg) => setLogs(prev => [...prev, msg]);
 
@@ -804,6 +914,106 @@
                 return '📁';
             };
 
+            // Category handlers
+            // Category handlers
+            const handleAddCategory = async () => {
+                if (!newCategory.id || !newCategory.name) {
+                    setError('ID dan Nama kategori wajib diisi');
+                    return false;
+                }
+                setIsProcessing(true);
+                setError('');
+                try {
+                    const gh = new GithubService(token);
+                    await gh.addCategory({ ...newCategory, icon: 'folder' });
+                    setNewCategory({ id: '', name: '', color: 'bg-blue-600' });
+                    onUploadSuccess();
+                    setIsProcessing(false);
+                    return true;
+                } catch (err) {
+                    setError(err.message);
+                    setIsProcessing(false);
+                    return false;
+                }
+            };
+
+            const handleDeleteCategory = async (categoryId) => {
+                setIsProcessing(true);
+                setError('');
+                try {
+                    const gh = new GithubService(token);
+                    await gh.deleteCategory(categoryId);
+                    onUploadSuccess();
+                } catch (err) {
+                    setError(err.message);
+                }
+                setIsProcessing(false);
+            };
+
+            // File Type handlers
+            // File Type handlers
+            const handleAddFileType = async () => {
+                if (!newFileType.id || !newFileType.label) {
+                    setError('ID dan Label tipe file wajib diisi');
+                    return false;
+                }
+                setIsProcessing(true);
+                setError('');
+                try {
+                    const gh = new GithubService(token);
+                    await gh.addFileType(newFileType);
+                    setNewFileType({ id: '', label: '', icon: '📄', badge: 'badge-brosur' });
+                    onUploadSuccess();
+                    setIsProcessing(false);
+                    return true;
+                } catch (err) {
+                    setError(err.message);
+                    setIsProcessing(false);
+                    return false;
+                }
+            };
+
+            const handleDeleteFileType = async (fileTypeId) => {
+                setIsProcessing(true);
+                setError('');
+                try {
+                    const gh = new GithubService(token);
+                    await gh.deleteFileType(fileTypeId);
+                    onUploadSuccess();
+                } catch (err) {
+                    setError(err.message);
+                }
+                setIsProcessing(false);
+            };
+
+            // Edit Product handlers
+            const handleEditProduct = (product) => {
+                setEditProduct(product);
+                setEditFormData({
+                    title: product.title,
+                    description: product.description,
+                    category: product.category
+                });
+            };
+
+            const handleSaveEditProduct = async () => {
+                if (!editFormData.title || !editFormData.category) {
+                    setError('Judul dan kategori wajib diisi');
+                    return;
+                }
+                setIsProcessing(true);
+                setError('');
+                try {
+                    const gh = new GithubService(token);
+                    await gh.updateProduct(editProduct.id, editFormData);
+                    setEditProduct(null);
+                    onUploadSuccess();
+                } catch (err) {
+                    setError(err.message);
+                }
+                setIsProcessing(false);
+            };
+
             if (!isOpen) return null;
 
             return (
@@ -815,6 +1025,133 @@
                         itemName={deleteModal.name}
                         isDeleting={isDeleting}
                     />
+
+                    {/* Quick-Add Modal */}
+                    {quickAddModal.open && (
+                        <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+                            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md p-6">
+                                <h4 className="font-bold text-lg mb-4">
+                                    {quickAddModal.type === 'category' ? '🏷️ Tambah Kategori Baru' : '📄 Tambah Tipe File Baru'}
+                                </h4>
+                                {error && (
+                                    <div className="p-2 mb-3 rounded-lg bg-red-100 dark:bg-red-900/30 text-sm text-red-600 dark:text-red-400">
+                                        ❌ {error}
+                                    </div>
+                                )}
+
+                                {quickAddModal.type === 'category' ? (
+                                    <div className="space-y-3">
+                                        <div>
+                                            <label className="block text-xs font-bold uppercase mb-1">ID Kategori</label>
+                                            <input
+                                                type="text"
+                                                placeholder="contoh: drainage"
+                                                value={newCategory.id}
+                                                onChange={e => setNewCategory({ ...newCategory, id: e.target.value.toLowerCase().replace(/\s+/g, '-') })}
+                                                className="w-full p-2 rounded border dark:bg-slate-700 dark:border-slate-600"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold uppercase mb-1">Nama Kategori</label>
+                                            <input
+                                                type="text"
+                                                placeholder="contoh: Drainage System"
+                                                value={newCategory.name}
+                                                onChange={e => setNewCategory({ ...newCategory, name: e.target.value })}
+                                                className="w-full p-2 rounded border dark:bg-slate-700 dark:border-slate-600"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold uppercase mb-1">Warna</label>
+                                            <div className="flex gap-1 flex-wrap">
+                                                {colorOptions.map(color => (
+                                                    <button
+                                                        key={color}
+                                                        type="button"
+                                                        onClick={() => setNewCategory({ ...newCategory, color })}
+                                                        className={`w-6 h-6 rounded-full ${color} ${newCategory.color === color ? 'ring-2 ring-offset-1 ring-blue-500' : ''}`}
+                                                    />
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-3">
+                                        <div>
+                                            <label className="block text-xs font-bold uppercase mb-1">ID Tipe File</label>
+                                            <input
+                                                type="text"
+                                                placeholder="contoh: tutorial"
+                                                value={newFileType.id}
+                                                onChange={e => setNewFileType({ ...newFileType, id: e.target.value.toLowerCase().replace(/\s+/g, '-') })}
+                                                className="w-full p-2 rounded border dark:bg-slate-700 dark:border-slate-600"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold uppercase mb-1">Label Tampilan</label>
+                                            <input
+                                                type="text"
+                                                placeholder="contoh: Tutorial"
+                                                value={newFileType.label}
+                                                onChange={e => setNewFileType({ ...newFileType, label: e.target.value })}
+                                                className="w-full p-2 rounded border dark:bg-slate-700 dark:border-slate-600"
+                                            />
+                                        </div>
+                                        <div className="flex gap-4">
+                                            <div className="flex-1">
+                                                <label className="block text-xs font-bold uppercase mb-1">Icon</label>
+                                                <input
+                                                    type="text"
+                                                    value={newFileType.icon}
+                                                    onChange={e => setNewFileType({ ...newFileType, icon: e.target.value })}
+                                                    className="w-full p-2 rounded border text-center dark:bg-slate-700 dark:border-slate-600"
+                                                />
+                                            </div>
+                                            <div className="flex-1">
+                                                <label className="block text-xs font-bold uppercase mb-1">Badge Style</label>
+                                                <select
+                                                    value={newFileType.badge}
+                                                    onChange={e => setNewFileType({ ...newFileType, badge: e.target.value })}
+                                                    className="w-full p-2 rounded border dark:bg-slate-700 dark:border-slate-600 text-sm"
+                                                >
+                                                    {badgeOptions.map(b => <option key={b} value={b}>{b.replace('badge-', '')}</option>)}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="flex gap-3 mt-4">
+                                    <button
+                                        onClick={() => { setQuickAddModal({ open: false, type: '' }); setError(''); }}
+                                        disabled={isProcessing}
+                                        className="flex-1 py-2.5 px-4 rounded-lg border border-slate-300 dark:border-slate-600 font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition disabled:opacity-50"
+                                    >
+                                        Batal
+                                    </button>
+                                    <button
+                                        onClick={async () => {
+                                            if (quickAddModal.type === 'category') {
+                                                const success = await handleAddCategory();
+                                                if (success) {
+                                                    setQuickAddModal({ open: false, type: '' });
+                                                }
+                                            } else {
+                                                const success = await handleAddFileType();
+                                                if (success) {
+                                                    setQuickAddModal({ open: false, type: '' });
+                                                }
+                                            }
+                                        }}
+                                        disabled={isProcessing}
+                                        className="flex-1 py-2.5 px-4 rounded-lg bg-green-600 hover:bg-green-700 text-white font-medium transition disabled:opacity-50"
+                                    >
+                                        {isProcessing ? '⏳ Menyimpan...' : '➕ Tambah'}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
                         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
@@ -865,15 +1202,21 @@
                                         <div className="flex border-b dark:border-slate-700">
                                             <button
                                                 onClick={() => setActiveTab('upload')}
-                                                className={`flex-1 py-3 text-sm font-semibold transition-colors ${activeTab === 'upload' ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50 dark:bg-blue-900/20' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
+                                                className={`flex-1 py-2 text-xs font-semibold transition-colors ${activeTab === 'upload' ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50 dark:bg-blue-900/20' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
                                             >
-                                                📤 Upload Produk
+                                                📤 Upload
                                             </button>
                                             <button
                                                 onClick={() => setActiveTab('manage')}
-                                                className={`flex-1 py-3 text-sm font-semibold transition-colors ${activeTab === 'manage' ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50 dark:bg-blue-900/20' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
+                                                className={`flex-1 py-2 text-xs font-semibold transition-colors ${activeTab === 'manage' ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50 dark:bg-blue-900/20' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
                                             >
-                                                🗂️ Kelola Database
+                                                🗂️ Database
+                                            </button>
+                                            <button
+                                                onClick={() => setActiveTab('settings')}
+                                                className={`flex-1 py-2 text-xs font-semibold transition-colors ${activeTab === 'settings' ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50 dark:bg-blue-900/20' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
+                                            >
+                                                ⚙️ Settings
                                             </button>
                                         </div>
 
@@ -918,11 +1261,17 @@
                                                             </div>
                                                             <div>
                                                                 <label className="block text-xs font-bold uppercase mb-1">Kategori</label>
-                                                                <select required className="w-full p-2 rounded border dark:bg-slate-700 dark:border-slate-600"
-                                                                    value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value })}>
-                                                                    <option value="">Pilih Kategori...</option>
-                                                                    {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                                                                </select>
+                                                                <div className="flex gap-2">
+                                                                    <select required className="flex-1 p-2 rounded border dark:bg-slate-700 dark:border-slate-600"
+                                                                        value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value })}>
+                                                                        <option value="">Pilih Kategori...</option>
+                                                                        {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                                                                    </select>
+                                                                    <button type="button" onClick={() => setQuickAddModal({ open: true, type: 'category' })}
+                                                                        className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold transition" title="Tambah Kategori Baru">
+                                                                        +
+                                                                    </button>
+                                                                </div>
                                                             </div>
                                                             <div>
                                                                 <label className="block text-xs font-bold uppercase mb-1">Deskripsi</label>
@@ -935,12 +1284,18 @@
                                                     {/* File Type */}
                                                     <div>
                                                         <label className="block text-xs font-bold uppercase mb-1">Tipe File</label>
-                                                        <select className="w-full p-2 rounded border dark:bg-slate-700 dark:border-slate-600"
-                                                            value={formData.fileType} onChange={e => setFormData({ ...formData, fileType: e.target.value })}>
-                                                            {Object.entries(fileTypeConfig).map(([key, val]) => (
-                                                                <option key={key} value={key}>{val.icon} {val.label}</option>
-                                                            ))}
-                                                        </select>
+                                                        <div className="flex gap-2">
+                                                            <select className="flex-1 p-2 rounded border dark:bg-slate-700 dark:border-slate-600"
+                                                                value={formData.fileType} onChange={e => setFormData({ ...formData, fileType: e.target.value })}>
+                                                                {(fileTypes || []).map(ft => (
+                                                                    <option key={ft.id} value={ft.id}>{ft.icon} {ft.label}</option>
+                                                                ))}
+                                                            </select>
+                                                            <button type="button" onClick={() => setQuickAddModal({ open: true, type: 'fileType' })}
+                                                                className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold transition" title="Tambah Tipe File Baru">
+                                                                +
+                                                            </button>
+                                                        </div>
                                                     </div>
 
                                                     {/* File Upload */}
@@ -1011,6 +1366,13 @@
                                                                     </div>
                                                                     <div className="flex items-center gap-2">
                                                                         <button
+                                                                            onClick={(e) => { e.stopPropagation(); handleEditProduct(item); }}
+                                                                            className="p-1.5 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 text-slate-400 hover:text-blue-500 transition"
+                                                                            title="Edit Produk"
+                                                                        >
+                                                                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                                                        </button>
+                                                                        <button
                                                                             onClick={(e) => { e.stopPropagation(); setDeleteModal({ open: true, type: 'product', productId: item.id, fileIndex: null, name: item.title }); }}
                                                                             className="p-1.5 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 text-slate-400 hover:text-red-500 transition"
                                                                             title="Hapus Produk"
@@ -1055,7 +1417,242 @@
                                                     </div>
                                                 </div>
                                             )}
+
+                                            {/* Settings Tab */}
+                                            {activeTab === 'settings' && (
+                                                <div className="space-y-4">
+                                                    {/* Error Message */}
+                                                    {error && (
+                                                        <div className="p-3 rounded-lg bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700">
+                                                            <div className="flex items-center justify-between">
+                                                                <p className="text-sm text-red-600 dark:text-red-400">❌ {error}</p>
+                                                                <button onClick={() => setError('')} className="text-red-500 hover:text-red-700">
+                                                                    <Icons.X className="w-4 h-4" />
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    )}
+
+                                                    {/* Settings Sub-tabs */}
+                                                    <div className="flex gap-2">
+                                                        <button
+                                                            onClick={() => setSettingsTab('categories')}
+                                                            className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition ${settingsTab === 'categories' ? 'bg-blue-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}
+                                                        >
+                                                            🏷️ Kategori
+                                                        </button>
+                                                        <button
+                                                            onClick={() => setSettingsTab('fileTypes')}
+                                                            className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition ${settingsTab === 'fileTypes' ? 'bg-blue-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}
+                                                        >
+                                                            📄 Tipe File
+                                                        </button>
+                                                    </div>
+
+                                                    {/* Categories Management */}
+                                                    {settingsTab === 'categories' && (
+                                                        <div className="space-y-4">
+                                                            <h4 className="font-bold text-sm">Kategori ({categories.length})</h4>
+
+                                                            {/* Add New Category */}
+                                                            <div className="bg-slate-50 dark:bg-slate-900 p-3 rounded-lg space-y-2">
+                                                                <p className="text-xs font-bold uppercase">Tambah Kategori Baru</p>
+                                                                <div className="grid grid-cols-2 gap-2">
+                                                                    <input
+                                                                        type="text"
+                                                                        placeholder="ID (contoh: drainage)"
+                                                                        value={newCategory.id}
+                                                                        onChange={e => setNewCategory({ ...newCategory, id: e.target.value.toLowerCase().replace(/\s+/g, '-') })}
+                                                                        className="p-2 rounded border text-sm dark:bg-slate-700 dark:border-slate-600"
+                                                                    />
+                                                                    <input
+                                                                        type="text"
+                                                                        placeholder="Nama kategori"
+                                                                        value={newCategory.name}
+                                                                        onChange={e => setNewCategory({ ...newCategory, name: e.target.value })}
+                                                                        className="p-2 rounded border text-sm dark:bg-slate-700 dark:border-slate-600"
+                                                                    />
+                                                                </div>
+                                                                <div className="flex items-center gap-2">
+                                                                    <span className="text-xs">Warna:</span>
+                                                                    <div className="flex gap-1 flex-wrap">
+                                                                        {colorOptions.map(color => (
+                                                                            <button
+                                                                                key={color}
+                                                                                type="button"
+                                                                                onClick={() => setNewCategory({ ...newCategory, color })}
+                                                                                className={`w-5 h-5 rounded-full ${color} ${newCategory.color === color ? 'ring-2 ring-offset-1 ring-blue-500' : ''}`}
+                                                                            />
+                                                                        ))}
+                                                                    </div>
+                                                                </div>
+                                                                <button
+                                                                    onClick={handleAddCategory}
+                                                                    disabled={isProcessing}
+                                                                    className="w-full py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium disabled:opacity-50"
+                                                                >
+                                                                    {isProcessing ? '⏳ Menyimpan...' : '➕ Tambah Kategori'}
+                                                                </button>
+                                                            </div>
+
+                                                            {/* Categories List */}
+                                                            <div className="space-y-2 max-h-[250px] overflow-y-auto">
+                                                                {categories.map(cat => (
+                                                                    <div key={cat.id} className="flex items-center justify-between bg-white dark:bg-slate-800 p-2 rounded-lg border dark:border-slate-700">
+                                                                        <div className="flex items-center gap-2">
+                                                                            <span className={`w-4 h-4 rounded-full ${cat.color || 'bg-slate-500'}`}></span>
+                                                                            <span className="text-sm font-medium">{cat.name}</span>
+                                                                            <span className="text-xs text-slate-400">({cat.id})</span>
+                                                                        </div>
+                                                                        <button
+                                                                            onClick={() => handleDeleteCategory(cat.id)}
+                                                                            disabled={isProcessing}
+                                                                            className="p-1 rounded hover:bg-red-100 dark:hover:bg-red-900/30 text-slate-400 hover:text-red-500 transition disabled:opacity-50"
+                                                                            title="Hapus Kategori"
+                                                                        >
+                                                                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                                                        </button>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    )}
+
+                                                    {/* File Types Management */}
+                                                    {settingsTab === 'fileTypes' && (
+                                                        <div className="space-y-4">
+                                                            <h4 className="font-bold text-sm">Tipe File ({fileTypes?.length || 0})</h4>
+
+                                                            {/* Add New File Type */}
+                                                            <div className="bg-slate-50 dark:bg-slate-900 p-3 rounded-lg space-y-2">
+                                                                <p className="text-xs font-bold uppercase">Tambah Tipe File Baru</p>
+                                                                <div className="grid grid-cols-2 gap-2">
+                                                                    <input
+                                                                        type="text"
+                                                                        placeholder="ID (contoh: tutorial)"
+                                                                        value={newFileType.id}
+                                                                        onChange={e => setNewFileType({ ...newFileType, id: e.target.value.toLowerCase().replace(/\s+/g, '-') })}
+                                                                        className="p-2 rounded border text-sm dark:bg-slate-700 dark:border-slate-600"
+                                                                    />
+                                                                    <input
+                                                                        type="text"
+                                                                        placeholder="Label tampilan"
+                                                                        value={newFileType.label}
+                                                                        onChange={e => setNewFileType({ ...newFileType, label: e.target.value })}
+                                                                        className="p-2 rounded border text-sm dark:bg-slate-700 dark:border-slate-600"
+                                                                    />
+                                                                </div>
+                                                                <div className="flex items-center gap-2">
+                                                                    <span className="text-xs">Icon:</span>
+                                                                    <input
+                                                                        type="text"
+                                                                        value={newFileType.icon}
+                                                                        onChange={e => setNewFileType({ ...newFileType, icon: e.target.value })}
+                                                                        className="w-12 p-1 rounded border text-center dark:bg-slate-700 dark:border-slate-600"
+                                                                    />
+                                                                    <span className="text-xs">Badge:</span>
+                                                                    <select
+                                                                        value={newFileType.badge}
+                                                                        onChange={e => setNewFileType({ ...newFileType, badge: e.target.value })}
+                                                                        className="p-1 rounded border text-sm dark:bg-slate-700 dark:border-slate-600"
+                                                                    >
+                                                                        {badgeOptions.map(b => <option key={b} value={b}>{b}</option>)}
+                                                                    </select>
+                                                                </div>
+                                                                <button
+                                                                    onClick={handleAddFileType}
+                                                                    disabled={isProcessing}
+                                                                    className="w-full py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium disabled:opacity-50"
+                                                                >
+                                                                    {isProcessing ? '⏳ Menyimpan...' : '➕ Tambah Tipe File'}
+                                                                </button>
+                                                            </div>
+
+                                                            {/* File Types List */}
+                                                            <div className="space-y-2 max-h-[250px] overflow-y-auto">
+                                                                {(fileTypes || []).map(ft => (
+                                                                    <div key={ft.id} className="flex items-center justify-between bg-white dark:bg-slate-800 p-2 rounded-lg border dark:border-slate-700">
+                                                                        <div className="flex items-center gap-2">
+                                                                            <span>{ft.icon}</span>
+                                                                            <span className={`text-xs px-1.5 py-0.5 rounded ${ft.badge}`}>{ft.label}</span>
+                                                                            <span className="text-xs text-slate-400">({ft.id})</span>
+                                                                        </div>
+                                                                        <button
+                                                                            onClick={() => handleDeleteFileType(ft.id)}
+                                                                            disabled={isProcessing}
+                                                                            className="p-1 rounded hover:bg-red-100 dark:hover:bg-red-900/30 text-slate-400 hover:text-red-500 transition disabled:opacity-50"
+                                                                            title="Hapus Tipe File"
+                                                                        >
+                                                                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                                                        </button>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
                                         </div>
+
+                                        {/* Edit Product Modal */}
+                                        {editProduct && (
+                                            <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+                                                <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md p-6">
+                                                    <h4 className="font-bold text-lg mb-4">✏️ Edit Produk</h4>
+                                                    {error && (
+                                                        <div className="p-2 mb-3 rounded-lg bg-red-100 dark:bg-red-900/30 text-sm text-red-600 dark:text-red-400">
+                                                            ❌ {error}
+                                                        </div>
+                                                    )}
+                                                    <div className="space-y-3">
+                                                        <div>
+                                                            <label className="block text-xs font-bold uppercase mb-1">Judul</label>
+                                                            <input
+                                                                type="text"
+                                                                value={editFormData.title}
+                                                                onChange={e => setEditFormData({ ...editFormData, title: e.target.value })}
+                                                                className="w-full p-2 rounded border dark:bg-slate-700 dark:border-slate-600"
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <label className="block text-xs font-bold uppercase mb-1">Kategori</label>
+                                                            <select
+                                                                value={editFormData.category}
+                                                                onChange={e => setEditFormData({ ...editFormData, category: e.target.value })}
+                                                                className="w-full p-2 rounded border dark:bg-slate-700 dark:border-slate-600"
+                                                            >
+                                                                {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                                                            </select>
+                                                        </div>
+                                                        <div>
+                                                            <label className="block text-xs font-bold uppercase mb-1">Deskripsi</label>
+                                                            <textarea
+                                                                value={editFormData.description}
+                                                                onChange={e => setEditFormData({ ...editFormData, description: e.target.value })}
+                                                                rows="3"
+                                                                className="w-full p-2 rounded border dark:bg-slate-700 dark:border-slate-600"
+                                                            ></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex gap-3 mt-4">
+                                                        <button
+                                                            onClick={() => { setEditProduct(null); setError(''); }}
+                                                            disabled={isProcessing}
+                                                            className="flex-1 py-2.5 px-4 rounded-lg border border-slate-300 dark:border-slate-600 font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition disabled:opacity-50"
+                                                        >
+                                                            Batal
+                                                        </button>
+                                                        <button
+                                                            onClick={handleSaveEditProduct}
+                                                            disabled={isProcessing}
+                                                            className="flex-1 py-2.5 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium transition disabled:opacity-50"
+                                                        >
+                                                            {isProcessing ? '⏳ Menyimpan...' : '💾 Simpan'}
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
                                     </>
                                 )}
 
@@ -1240,6 +1837,7 @@
                         isOpen={isAdminOpen}
                         onClose={() => setIsAdminOpen(false)}
                         categories={database.categories}
+                        fileTypes={database.fileTypes}
                         items={database.items}
                         onUploadSuccess={handleUploadSuccess}
                     />

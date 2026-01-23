@@ -3,66 +3,48 @@
     {
       "id": "company-profile",
       "name": "Company Profile",
-      "icon": "building",
-      "color": "bg-slate-600"
+      "icon": "building"
     },
     {
       "id": "geogrid",
       "name": "Geogrid",
-      "icon": "grid",
-      "color": "bg-blue-600"
+      "icon": "grid"
     },
     {
       "id": "geomembrane",
       "name": "Geomembrane",
-      "icon": "layers",
-      "color": "bg-emerald-600"
+      "icon": "layers"
     },
     {
       "id": "geotextile",
       "name": "Geotextile",
-      "icon": "fabric",
-      "color": "bg-purple-600"
+      "icon": "fabric"
     },
     {
       "id": "retaining-wall",
       "name": "Retaining Wall",
-      "icon": "wall",
-      "color": "bg-amber-600"
+      "icon": "wall"
     },
     {
       "id": "erosion-control",
       "name": "Kontrol Erosi",
-      "icon": "shield",
-      "color": "bg-green-600"
+      "icon": "shield"
     },
     {
       "id": "presentasi",
       "name": "Presentasi",
-      "icon": "presentation",
-      "color": "bg-orange-600"
+      "icon": "presentation"
     },
     {
       "id": "geocell",
       "name": "Geocell",
-      "icon": "honeycomb",
-      "color": "bg-cyan-600"
+      "icon": "honeycomb"
     },
     {
       "id": "asphalt",
       "name": "Asphalt Reinforcement",
-      "icon": "road",
-      "color": "bg-rose-600"
+      "icon": "road"
     }
-  ],
-  "fileTypes": [
-    { "id": "brosur", "label": "Brosur", "icon": "📄", "badge": "badge-brosur" },
-    { "id": "spesifikasi", "label": "Spesifikasi", "icon": "📋", "badge": "badge-spesifikasi" },
-    { "id": "metode", "label": "Metode", "icon": "🔧", "badge": "badge-metode" },
-    { "id": "hasil-uji", "label": "Hasil Uji", "icon": "🧪", "badge": "badge-hasil-uji" },
-    { "id": "sertifikasi", "label": "Sertifikasi", "icon": "✅", "badge": "badge-sertifikasi" },
-    { "id": "case-history", "label": "Case History", "icon": "📚", "badge": "badge-case-history" },
-    { "id": "presentasi", "label": "Presentasi", "icon": "📊", "badge": "badge-presentasi" }
   ],
   "items": [
     {
@@ -861,49 +843,22 @@
       ]
     },
     {
-      "id": 20,
-      "title": "Case History RAPP Geogrid Biaxial - Riau",
-      "category": "geogrid",
-      "subcategory": "Biaxial",
-      "tags": [
-        "case history",
-        "biaxial",
-        "geogrid",
-        "rapp",
-        "riau",
-        "gambut",
-        "stabilisasi",
-        "jalan"
-      ],
-      "description": "Studi kasus penggunaan Geogrid Biaxial untuk stabilisasi tanah gambut pada proyek jalan akses RAPP di Riau.",
-      "highlight": false,
-      "files": [
-        {
-          "name": "CASE HISTORY RAPP Geogrid Biaxial - Riau.pdf",
-          "path": "Assets/01. Geogrid/02. Biaxial/06. Case History/CASE HISTORY RAPP Geogrid Biaxial - Riau.pdf",
-          "type": "case-history",
-          "size": "1 MB",
-          "gdriveId": "1-t85UBDf8YO3cLmmUNU_ZaAzAHwH0zNU"
-        }
-      ]
-    },
-    {
-      "id": 1768814302104,
-      "title": "Tensar TriAx",
+      "id": 1768983872577,
+      "title": "Case History Biaxial Geogrid",
       "category": "geogrid",
       "subcategory": null,
       "tags": [
         "new",
         "geogrid"
       ],
-      "description": "Case History Access Road Kuala Pembuang",
+      "description": "Case History Biaxial Geogrid Project ",
       "highlight": false,
       "files": [
         {
-          "name": "CS Access Road Kuala Pembuang.pdf",
-          "path": "Assets/New/CS Access Road Kuala Pembuang.pdf",
-          "type": "brosur",
-          "size": "1.8 MB",
+          "name": "Case History RAPP-Biaxial Geogrid.pdf",
+          "path": "Assets/New/Case History RAPP-Biaxial Geogrid.pdf",
+          "type": "case-history",
+          "size": "16.9 MB",
           "gdriveId": ""
         }
       ]

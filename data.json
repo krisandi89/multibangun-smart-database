@@ -56,13 +56,54 @@
     }
   ],
   "fileTypes": [
-    { "id": "brosur", "label": "Brosur", "icon": "📄", "badge": "badge-brosur" },
-    { "id": "spesifikasi", "label": "Spesifikasi", "icon": "📋", "badge": "badge-spesifikasi" },
-    { "id": "metode", "label": "Metode", "icon": "🔧", "badge": "badge-metode" },
-    { "id": "hasil-uji", "label": "Hasil Uji", "icon": "🧪", "badge": "badge-hasil-uji" },
-    { "id": "sertifikasi", "label": "Sertifikasi", "icon": "✅", "badge": "badge-sertifikasi" },
-    { "id": "case-history", "label": "Case History", "icon": "📚", "badge": "badge-case-history" },
-    { "id": "presentasi", "label": "Presentasi", "icon": "📊", "badge": "badge-presentasi" }
+    {
+      "id": "brosur",
+      "label": "Brosur",
+      "icon": "ð",
+      "badge": "badge-brosur"
+    },
+    {
+      "id": "spesifikasi",
+      "label": "Spesifikasi",
+      "icon": "ð",
+      "badge": "badge-spesifikasi"
+    },
+    {
+      "id": "metode",
+      "label": "Metode",
+      "icon": "ð§",
+      "badge": "badge-metode"
+    },
+    {
+      "id": "hasil-uji",
+      "label": "Hasil Uji",
+      "icon": "ð§ª",
+      "badge": "badge-hasil-uji"
+    },
+    {
+      "id": "sertifikasi",
+      "label": "Sertifikasi",
+      "icon": "â",
+      "badge": "badge-sertifikasi"
+    },
+    {
+      "id": "case-history",
+      "label": "Case History",
+      "icon": "ð",
+      "badge": "badge-case-history"
+    },
+    {
+      "id": "presentasi",
+      "label": "Presentasi",
+      "icon": "ð",
+      "badge": "badge-presentasi"
+    },
+    {
+      "id": "case-study",
+      "label": "Case Study",
+      "icon": "📄",
+      "badge": "badge-case-history"
+    }
   ],
   "items": [
     {

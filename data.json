@@ -103,6 +103,12 @@
       "label": "Case Study",
       "icon": "📝",
       "badge": "badge-case-history"
+    },
+    {
+      "id": "metode-pemasangan",
+      "label": "Intallation Guideline",
+      "icon": "📄",
+      "badge": "badge-metode"
     }
   ],
   "items": [

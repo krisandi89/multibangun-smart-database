@@ -59,49 +59,49 @@
     {
       "id": "brosur",
       "label": "Brosur",
-      "icon": "ÃÂ°ÃÂÃÂÃÂ",
+      "icon": "📄",
       "badge": "badge-brosur"
     },
     {
       "id": "spesifikasi",
       "label": "Spesifikasi",
-      "icon": "ÃÂ°ÃÂÃÂÃÂ",
+      "icon": "📋",
       "badge": "badge-spesifikasi"
     },
     {
       "id": "metode",
       "label": "Metode",
-      "icon": "ÃÂ°ÃÂÃÂÃÂ§",
+      "icon": "🔧",
       "badge": "badge-metode"
     },
     {
       "id": "hasil-uji",
       "label": "Hasil Uji",
-      "icon": "ÃÂ°ÃÂÃÂ§ÃÂª",
+      "icon": "🧪",
       "badge": "badge-hasil-uji"
     },
     {
       "id": "sertifikasi",
       "label": "Sertifikasi",
-      "icon": "ÃÂ¢ÃÂÃÂ",
+      "icon": "✅",
       "badge": "badge-sertifikasi"
     },
     {
       "id": "case-history",
       "label": "Case History",
-      "icon": "ÃÂ°ÃÂÃÂÃÂ",
+      "icon": "📚",
       "badge": "badge-case-history"
     },
     {
       "id": "presentasi",
       "label": "Presentasi",
-      "icon": "ÃÂ°ÃÂÃÂÃÂ",
+      "icon": "📊",
       "badge": "badge-presentasi"
     },
     {
       "id": "case-study",
       "label": "Case Study",
-      "icon": "Ã°ÂÂÂ",
+      "icon": "📝",
       "badge": "badge-case-history"
     }
   ],

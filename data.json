@@ -59,49 +59,49 @@
     {
       "id": "brosur",
       "label": "Brosur",
-      "icon": "ð",
+      "icon": "Ã°ÂÂÂ",
       "badge": "badge-brosur"
     },
     {
       "id": "spesifikasi",
       "label": "Spesifikasi",
-      "icon": "ð",
+      "icon": "Ã°ÂÂÂ",
       "badge": "badge-spesifikasi"
     },
     {
       "id": "metode",
       "label": "Metode",
-      "icon": "ð§",
+      "icon": "Ã°ÂÂÂ§",
       "badge": "badge-metode"
     },
     {
       "id": "hasil-uji",
       "label": "Hasil Uji",
-      "icon": "ð§ª",
+      "icon": "Ã°ÂÂ§Âª",
       "badge": "badge-hasil-uji"
     },
     {
       "id": "sertifikasi",
       "label": "Sertifikasi",
-      "icon": "â",
+      "icon": "Ã¢ÂÂ",
       "badge": "badge-sertifikasi"
     },
     {
       "id": "case-history",
       "label": "Case History",
-      "icon": "ð",
+      "icon": "Ã°ÂÂÂ",
       "badge": "badge-case-history"
     },
     {
       "id": "presentasi",
       "label": "Presentasi",
-      "icon": "ð",
+      "icon": "Ã°ÂÂÂ",
       "badge": "badge-presentasi"
     },
     {
       "id": "case-study",
       "label": "Case Study",
-      "icon": "📄",
+      "icon": "ð",
       "badge": "badge-case-history"
     }
   ],
@@ -483,6 +483,13 @@
           "type": "brosur",
           "size": "1 MB",
           "gdriveId": "1H_DDo_rl-mNn1TMzyKWePTLxG-f9I94F"
+        },
+        {
+          "name": "NX750_PRODUCT IDENTIFICATION DATASHEET.pdf",
+          "path": "Assets/New/NX750_PRODUCT IDENTIFICATION DATASHEET.pdf",
+          "type": "spesifikasi",
+          "size": "0.5 MB",
+          "gdriveId": ""
         }
       ]
     },

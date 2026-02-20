@@ -473,6 +473,13 @@
         // Data embedded directly to avoid CORS issues when opening file locally
         // ==================== GITHUB ADMIN INTEGRATION ====================
 
+        // UTF-8 safe base64 decode (atob only handles ASCII/Latin-1, not multi-byte chars like emojis)
+        function decodeBase64Utf8(base64) {
+            const binString = atob(base64);
+            const bytes = Uint8Array.from(binString, (c) => c.charCodeAt(0));
+            return new TextDecoder('utf-8').decode(bytes);
+        }
+
         const GITHUB_CONFIG = {
             OWNER: 'krisandi89',
             REPO: 'multibangun-smart-database',
@@ -578,7 +585,7 @@
 
             async updateDataJson(newItem) {
                 const fileData = await this.getFile('data.json');
-                const content = JSON.parse(atob(fileData.content));
+                const content = JSON.parse(decodeBase64Utf8(fileData.content));
                 content.items.push(newItem);
                 const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2))));
                 await this.uploadFile('data.json', newContent, `Add product: ${newItem.title}`);
@@ -587,7 +594,7 @@
 
             async addFileToExistingProduct(productId, newFile) {
                 const fileData = await this.getFile('data.json');
-                const content = JSON.parse(atob(fileData.content));
+                const content = JSON.parse(decodeBase64Utf8(fileData.content));
                 const itemIndex = content.items.findIndex(item => item.id === productId);
                 if (itemIndex === -1) throw new Error('Produk tidak ditemukan');
                 content.items[itemIndex].files.push(newFile);
@@ -598,7 +605,7 @@
 
             async deleteProduct(productId) {
                 const fileData = await this.getFile('data.json');
-                const content = JSON.parse(atob(fileData.content));
+                const content = JSON.parse(decodeBase64Utf8(fileData.content));
                 const itemIndex = content.items.findIndex(item => item.id === productId);
                 if (itemIndex === -1) throw new Error('Produk tidak ditemukan');
                 const deletedTitle = content.items[itemIndex].title;
@@ -610,7 +617,7 @@
 
             async deleteFile(productId, fileIndex) {
                 const fileData = await this.getFile('data.json');
-                const content = JSON.parse(atob(fileData.content));
+                const content = JSON.parse(decodeBase64Utf8(fileData.content));
                 const itemIndex = content.items.findIndex(item => item.id === productId);
                 if (itemIndex === -1) throw new Error('Produk tidak ditemukan');
                 const deletedFileName = content.items[itemIndex].files[fileIndex]?.name || 'file';
@@ -623,13 +630,13 @@
 
             async getDataJson() {
                 const fileData = await this.getFile('data.json');
-                return JSON.parse(atob(fileData.content));
+                return JSON.parse(decodeBase64Utf8(fileData.content));
             }
 
             // Category Management
             async addCategory(newCategory) {
                 const fileData = await this.getFile('data.json');
-                const content = JSON.parse(atob(fileData.content));
+                const content = JSON.parse(decodeBase64Utf8(fileData.content));
                 content.categories.push(newCategory);
                 const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2))));
                 await this.uploadFile('data.json', newContent, `Add category: ${newCategory.name}`);
@@ -638,7 +645,7 @@
 
             async updateCategory(categoryId, updates) {
                 const fileData = await this.getFile('data.json');
-                const content = JSON.parse(atob(fileData.content));
+                const content = JSON.parse(decodeBase64Utf8(fileData.content));
                 const idx = content.categories.findIndex(c => c.id === categoryId);
                 if (idx === -1) throw new Error('Kategori tidak ditemukan');
                 content.categories[idx] = { ...content.categories[idx], ...updates };
@@ -649,7 +656,7 @@
 
             async deleteCategory(categoryId) {
                 const fileData = await this.getFile('data.json');
-                const content = JSON.parse(atob(fileData.content));
+                const content = JSON.parse(decodeBase64Utf8(fileData.content));
                 const inUse = content.items.some(item => item.category === categoryId);
                 if (inUse) throw new Error('Kategori masih digunakan oleh produk. Hapus atau pindahkan produk terlebih dahulu.');
                 const idx = content.categories.findIndex(c => c.id === categoryId);
@@ -663,7 +670,7 @@
             // File Type Management
             async addFileType(newFileType) {
                 const fileData = await this.getFile('data.json');
-                const content = JSON.parse(atob(fileData.content));
+                const content = JSON.parse(decodeBase64Utf8(fileData.content));
                 if (!content.fileTypes) content.fileTypes = [];
                 content.fileTypes.push(newFileType);
                 const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2))));
@@ -673,7 +680,7 @@
 
             async updateFileType(fileTypeId, updates) {
                 const fileData = await this.getFile('data.json');
-                const content = JSON.parse(atob(fileData.content));
+                const content = JSON.parse(decodeBase64Utf8(fileData.content));
                 if (!content.fileTypes) throw new Error('File types belum ada');
                 const idx = content.fileTypes.findIndex(f => f.id === fileTypeId);
                 if (idx === -1) throw new Error('Tipe file tidak ditemukan');
@@ -685,7 +692,7 @@
 
             async deleteFileType(fileTypeId) {
                 const fileData = await this.getFile('data.json');
-                const content = JSON.parse(atob(fileData.content));
+                const content = JSON.parse(decodeBase64Utf8(fileData.content));
                 if (!content.fileTypes) throw new Error('File types belum ada');
                 // Check if file type is in use
                 const inUse = content.items.some(item => item.files.some(f => f.type === fileTypeId));
@@ -701,7 +708,7 @@
             // Product Update
             async updateProduct(productId, updates) {
                 const fileData = await this.getFile('data.json');
-                const content = JSON.parse(atob(fileData.content));
+                const content = JSON.parse(decodeBase64Utf8(fileData.content));
                 const idx = content.items.findIndex(item => item.id === productId);
                 if (idx === -1) throw new Error('Produk tidak ditemukan');
                 content.items[idx] = { ...content.items[idx], ...updates };

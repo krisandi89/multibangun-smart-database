@@ -503,6 +503,13 @@
           "type": "sertifikasi",
           "size": "0.1 MB",
           "gdriveId": ""
+        },
+        {
+          "name": "Tensar InterAx Installation Guide.pdf",
+          "path": "Assets/New/Tensar InterAx Installation Guide.pdf",
+          "type": "metode-pemasangan",
+          "size": "1.6 MB",
+          "gdriveId": ""
         }
       ]
     },

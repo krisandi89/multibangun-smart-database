@@ -948,6 +948,27 @@
           "gdriveId": ""
         }
       ]
+    },
+    {
+      "id": 1773549359522,
+      "title": "Round Polymer Bodkin",
+      "category": "geogrid",
+      "subcategory": null,
+      "tags": [
+        "new",
+        "geogrid"
+      ],
+      "description": "For Connection Between RE to RE",
+      "highlight": false,
+      "files": [
+        {
+          "name": "TN_Round Bodkin.pdf",
+          "path": "Assets/New/TN_Round Bodkin.pdf",
+          "type": "spesifikasi",
+          "size": "0.2 MB",
+          "gdriveId": ""
+        }
+      ]
     }
   ]
 }

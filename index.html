@@ -1185,7 +1185,7 @@
             );
         };
 
-        const AdminModal = ({ isOpen, onClose, categories, fileTypes, items, onUploadSuccess }) => {
+        const AdminModal = ({ isOpen, onClose, categories, fileTypes, items, onUploadSuccess, onUpdateDatabase, onManualReload }) => {
             const [activeTab, setActiveTab] = useState('upload'); // upload, manage, settings
             const [step, setStep] = useState('token'); // token, validating, main, uploading
             const [token, setToken] = useState(localStorage.getItem('gh_token') || '');
@@ -1203,6 +1203,7 @@
             const [expandedProduct, setExpandedProduct] = useState(null);
             const [deleteModal, setDeleteModal] = useState({ open: false, type: '', productId: null, fileIndex: null, name: '' });
             const [isDeleting, setIsDeleting] = useState(false);
+            const [isReloading, setIsReloading] = useState(false);
             const [error, setError] = useState('');
 
             // Settings state
@@ -1232,6 +1233,19 @@
             ];
 
             const addLog = (msg) => setLogs(prev => [...prev, msg]);
+
+            const handleReloadClick = async () => {
+                setIsReloading(true);
+                setError('');
+                try {
+                    if (onManualReload) {
+                        await onManualReload();
+                    }
+                } catch (err) {
+                    setError('Gagal memuat data: ' + err.message);
+                }
+                setIsReloading(false);
+            };
 
             const handleSaveToken = async () => {
                 if (!token) return;
@@ -1288,9 +1302,10 @@
                                 gdriveId: ''
                             };
 
+                            let updatedDb = null;
                             if (uploadMode === 'existing' && selectedProduct) {
                                 addLog('📝 Menambahkan file ke produk existing...');
-                                await gh.addFileToExistingProduct(parseInt(selectedProduct), newFile);
+                                updatedDb = await gh.addFileToExistingProduct(parseInt(selectedProduct), newFile);
                                 addLog('✅ File ditambahkan ke produk!');
                             } else {
                                 addLog('📝 Membuat produk baru...');
@@ -1304,19 +1319,23 @@
                                     highlight: false,
                                     files: [newFile]
                                 };
-                                await gh.updateDataJson(newItem);
+                                updatedDb = await gh.updateDataJson(newItem);
                                 addLog('✅ Produk baru dibuat!');
                             }
 
-                            addLog('🎉 Selesai! Tunggu Vercel deploy 1-2 menit.');
+                            if (updatedDb && onUpdateDatabase) {
+                                onUpdateDatabase(updatedDb);
+                            }
+
+                            addLog('🎉 Selesai! Data langsung terupdate.');
                             setTimeout(() => {
-                                onUploadSuccess();
+                                if (onUploadSuccess) onUploadSuccess();
                                 onClose();
                                 setStep('main');
                                 setFormData({ title: '', category: '', description: '', fileType: 'brosur', file: null });
                                 setUploadMode('new');
                                 setSelectedProduct('');
-                            }, 2000);
+                            }, 1200);
                         } catch (error) {
                             addLog(`❌ Error: ${error.message}`);
                         }
@@ -1331,13 +1350,18 @@
                 setError('');
                 try {
                     const gh = new GithubService(token);
+                    let updatedDb = null;
                     if (deleteModal.type === 'product') {
-                        await gh.deleteProduct(deleteModal.productId);
+                        updatedDb = await gh.deleteProduct(deleteModal.productId);
                     } else {
-                        await gh.deleteFile(deleteModal.productId, deleteModal.fileIndex);
+                        updatedDb = await gh.deleteFile(deleteModal.productId, deleteModal.fileIndex);
                     }
                     setDeleteModal({ open: false, type: '', productId: null, fileIndex: null, name: '' });
-                    onUploadSuccess();
+                    if (updatedDb && onUpdateDatabase) {
+                        onUpdateDatabase(updatedDb);
+                    } else if (onUploadSuccess) {
+                        onUploadSuccess();
+                    }
                 } catch (err) {
                     setError('Gagal menghapus: ' + err.message);
                     setDeleteModal({ open: false, type: '', productId: null, fileIndex: null, name: '' });
@@ -1356,7 +1380,6 @@
             };
 
             // Category handlers
-            // Category handlers
             const handleAddCategory = async () => {
                 if (!newCategory.id || !newCategory.name) {
                     setError('ID dan Nama kategori wajib diisi');
@@ -1366,9 +1389,13 @@
                 setError('');
                 try {
                     const gh = new GithubService(token);
-                    await gh.addCategory({ ...newCategory, icon: 'folder' });
+                    const updatedDb = await gh.addCategory({ ...newCategory, icon: 'folder' });
                     setNewCategory({ id: '', name: '', color: 'bg-blue-600' });
-                    onUploadSuccess();
+                    if (updatedDb && onUpdateDatabase) {
+                        onUpdateDatabase(updatedDb);
+                    } else if (onUploadSuccess) {
+                        onUploadSuccess();
+                    }
                     setIsProcessing(false);
                     return true;
                 } catch (err) {
@@ -1383,15 +1410,18 @@
                 setError('');
                 try {
                     const gh = new GithubService(token);
-                    await gh.deleteCategory(categoryId);
-                    onUploadSuccess();
+                    const updatedDb = await gh.deleteCategory(categoryId);
+                    if (updatedDb && onUpdateDatabase) {
+                        onUpdateDatabase(updatedDb);
+                    } else if (onUploadSuccess) {
+                        onUploadSuccess();
+                    }
                 } catch (err) {
                     setError(err.message);
                 }
                 setIsProcessing(false);
             };
 
-            // File Type handlers
             // File Type handlers
             const handleAddFileType = async () => {
                 if (!newFileType.id || !newFileType.label) {
@@ -1402,9 +1432,13 @@
                 setError('');
                 try {
                     const gh = new GithubService(token);
-                    await gh.addFileType(newFileType);
+                    const updatedDb = await gh.addFileType(newFileType);
                     setNewFileType({ id: '', label: '', icon: '📄', badge: 'badge-brosur' });
-                    onUploadSuccess();
+                    if (updatedDb && onUpdateDatabase) {
+                        onUpdateDatabase(updatedDb);
+                    } else if (onUploadSuccess) {
+                        onUploadSuccess();
+                    }
                     setIsProcessing(false);
                     return true;
                 } catch (err) {
@@ -1419,8 +1453,12 @@
                 setError('');
                 try {
                     const gh = new GithubService(token);
-                    await gh.deleteFileType(fileTypeId);
-                    onUploadSuccess();
+                    const updatedDb = await gh.deleteFileType(fileTypeId);
+                    if (updatedDb && onUpdateDatabase) {
+                        onUpdateDatabase(updatedDb);
+                    } else if (onUploadSuccess) {
+                        onUploadSuccess();
+                    }
                 } catch (err) {
                     setError(err.message);
                 }
@@ -1446,9 +1484,13 @@
                 setError('');
                 try {
                     const gh = new GithubService(token);
-                    await gh.updateProduct(editProduct.id, editFormData);
+                    const updatedDb = await gh.updateProduct(editProduct.id, editFormData);
                     setEditProduct(null);
-                    onUploadSuccess();
+                    if (updatedDb && onUpdateDatabase) {
+                        onUpdateDatabase(updatedDb);
+                    } else if (onUploadSuccess) {
+                        onUploadSuccess();
+                    }
                 } catch (err) {
                     setError(err.message);
                 }
@@ -1598,7 +1640,22 @@
                         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
                             {/* Header */}
                             <div className="p-4 border-b dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-900">
-                                <h3 className="font-bold text-lg">⚙️ Admin Mode</h3>
+                                <div className="flex items-center gap-2">
+                                    <h3 className="font-bold text-lg">⚙️ Admin Mode</h3>
+                                    {step === 'main' && (
+                                        <button
+                                            onClick={handleReloadClick}
+                                            disabled={isReloading}
+                                            className="flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-lg bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-800 transition disabled:opacity-50 ml-2"
+                                            title="Muat ulang data terbaru langsung dari GitHub tanpa reload browser"
+                                        >
+                                            <svg className={`w-3.5 h-3.5 ${isReloading ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                            </svg>
+                                            <span>{isReloading ? 'Reloading...' : '🔄 Reload Data'}</span>
+                                        </button>
+                                    )}
+                                </div>
                                 <div className="flex items-center gap-2">
                                     {step === 'main' && (
                                         <button onClick={handleLogout} className="text-xs text-slate-500 hover:text-red-500 transition">Logout</button>
@@ -2145,28 +2202,39 @@
             });
             const searchInputRef = useRef(null);
 
-            const handleUploadSuccess = () => {
+            const handleUpdateDatabase = (newDatabase) => {
+                if (!newDatabase || !newDatabase.items) return;
+                const localSaved = JSON.parse(localStorage.getItem('custom_mb_items') || '[]');
+                const mergedItems = [...localSaved, ...newDatabase.items];
+                const mergedData = { ...newDatabase, items: mergedItems };
+                setDatabase(mergedData);
+                setResults(mergedData.items);
+                setIsLoading(false);
+            };
+
+            const handleManualReload = async () => {
                 setIsLoading(true);
-                setTimeout(() => {
-                    fetch(`data.json?t=${new Date().getTime()}`)
-                        .then(res => res.json())
-                        .then(data => {
-                            const localSaved = JSON.parse(localStorage.getItem('custom_mb_items') || '[]');
-                            const mergedItems = [...localSaved, ...data.items];
-                            const mergedData = { ...data, items: mergedItems };
-                            setDatabase(mergedData);
-                            setResults(mergedData.items);
-                            setIsLoading(false);
-                        })
-                        .catch(() => {
-                            const localSaved = JSON.parse(localStorage.getItem('custom_mb_items') || '[]');
-                            const mergedItems = [...localSaved, ...EMBEDDED_DATABASE.items];
-                            const mergedData = { ...EMBEDDED_DATABASE, items: mergedItems };
-                            setDatabase(mergedData);
-                            setResults(mergedData.items);
-                            setIsLoading(false);
-                        });
-                }, 1000);
+                try {
+                    const token = localStorage.getItem('gh_token');
+                    let data = null;
+                    if (token) {
+                        const gh = new GithubService(token);
+                        data = await gh.getDataJson();
+                    } else {
+                        const res = await fetch(`data.json?t=${new Date().getTime()}`);
+                        data = await res.json();
+                    }
+                    if (data && data.items) {
+                        handleUpdateDatabase(data);
+                    }
+                } catch (err) {
+                    console.error("Reload error:", err);
+                }
+                setIsLoading(false);
+            };
+
+            const handleUploadSuccess = () => {
+                handleManualReload();
             };
 
             const toggleDarkMode = () => {
@@ -2187,24 +2255,7 @@
 
             // Load database
             useEffect(() => {
-                fetch(`data.json?t=${new Date().getTime()}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        const localSaved = JSON.parse(localStorage.getItem('custom_mb_items') || '[]');
-                        const mergedItems = [...localSaved, ...data.items];
-                        const mergedData = { ...data, items: mergedItems };
-                        setDatabase(mergedData);
-                        setResults(mergedData.items);
-                        setIsLoading(false);
-                    })
-                    .catch(() => {
-                        const localSaved = JSON.parse(localStorage.getItem('custom_mb_items') || '[]');
-                        const mergedItems = [...localSaved, ...EMBEDDED_DATABASE.items];
-                        const mergedData = { ...EMBEDDED_DATABASE, items: mergedItems };
-                        setDatabase(mergedData);
-                        setResults(mergedData.items);
-                        setIsLoading(false);
-                    });
+                handleManualReload();
             }, []);
 
             // Alphabet list generator for A-Z index
@@ -2295,6 +2346,8 @@
                         fileTypes={database.fileTypes}
                         items={database.items}
                         onUploadSuccess={handleUploadSuccess}
+                        onUpdateDatabase={handleUpdateDatabase}
+                        onManualReload={handleManualReload}
                     />
 
                     {/* Quick Add Modal */}

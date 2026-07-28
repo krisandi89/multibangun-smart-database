@@ -1002,6 +1002,27 @@
           "gdriveId": ""
         }
       ]
+    },
+    {
+      "id": 1785214905190,
+      "title": "InSAR - Satelite Monitoring",
+      "category": "monitoring",
+      "subcategory": null,
+      "tags": [
+        "new",
+        "monitoring"
+      ],
+      "description": "untuk monitoring displacement tanah dengan menggunakan teknologi satelite",
+      "highlight": false,
+      "files": [
+        {
+          "name": "Brosur InSAR (Satellite Monitoring)_compressed.pdf",
+          "path": "Assets/New/Brosur InSAR (Satellite Monitoring)_compressed.pdf",
+          "type": "brosur",
+          "size": "1.4 MB",
+          "gdriveId": ""
+        }
+      ]
     }
   ]
 }

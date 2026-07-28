@@ -638,6 +638,13 @@
           "type": "presentasi",
           "size": "286 MB",
           "gdriveId": "1ZsmFV3zC2mpZCSQYyv2IJFCIUqu6BKov"
+        },
+        {
+          "name": "Brosur Multiblock update_compressed.pdf",
+          "path": "Assets/New/Brosur Multiblock update_compressed.pdf",
+          "type": "brosur",
+          "size": "3.6 MB",
+          "gdriveId": ""
         }
       ]
     },

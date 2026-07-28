@@ -700,14 +700,13 @@
                     localSaved.unshift(newItem);
                     localStorage.setItem('custom_mb_items', JSON.stringify(localSaved));
 
-                    setSaveSuccessMsg('✅ Materi baru berhasil ditambahkan dan langsung tampil!');
+                    setSaveSuccessMsg('✅ Materi baru berhasil ditambahkan dan langsung tampil! Anda dapat menambah materi lagi di bawah ini.');
+                    onSaveSuccess(newItem);
+                    setFormData({ title: '', category: categories[0]?.id || 'geogrid', subcategory: '', description: '', fileType: 'brosur', file: null });
+                    setIsSaving(false);
                     setTimeout(() => {
-                        onSaveSuccess(newItem);
-                        onClose();
-                        setFormData({ title: '', category: categories[0]?.id || 'geogrid', subcategory: '', description: '', fileType: 'brosur', file: null });
-                        setIsSaving(false);
                         setSaveSuccessMsg('');
-                    }, 1200);
+                    }, 4000);
 
                 } catch (err) {
                     setSaveLog(`❌ Error: ${err.message}`);
@@ -1327,15 +1326,13 @@
                                 onUpdateDatabase(updatedDb);
                             }
 
-                            addLog('🎉 Selesai! Data langsung terupdate.');
+                            addLog('🎉 Selesai! Data berhasil diupdate dan tersimpan di database.');
                             setTimeout(() => {
-                                if (onUploadSuccess) onUploadSuccess();
-                                onClose();
                                 setStep('main');
                                 setFormData({ title: '', category: '', description: '', fileType: 'brosur', file: null });
                                 setUploadMode('new');
                                 setSelectedProduct('');
-                            }, 1200);
+                            }, 1500);
                         } catch (error) {
                             addLog(`❌ Error: ${error.message}`);
                         }

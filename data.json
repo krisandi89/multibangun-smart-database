@@ -968,6 +968,27 @@
           "gdriveId": ""
         }
       ]
+    },
+    {
+      "id": 1785214335996,
+      "title": "Stripdrain",
+      "category": "drainage",
+      "subcategory": null,
+      "tags": [
+        "new",
+        "drainage"
+      ],
+      "description": "Material Geosintetik untuk Drainase ",
+      "highlight": false,
+      "files": [
+        {
+          "name": "Brosur Stripdrain update_compressed.pdf",
+          "path": "Assets/New/Brosur Stripdrain update_compressed.pdf",
+          "type": "brosur",
+          "size": "2.2 MB",
+          "gdriveId": ""
+        }
+      ]
     }
   ]
 }

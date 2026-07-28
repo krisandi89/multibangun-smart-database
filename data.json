@@ -59,6 +59,12 @@
       "name": "Drainage System",
       "color": "bg-indigo-600",
       "icon": "folder"
+    },
+    {
+      "id": "monitoring",
+      "name": "Monitoring",
+      "color": "bg-slate-600",
+      "icon": "folder"
     }
   ],
   "fileTypes": [

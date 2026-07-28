@@ -2261,7 +2261,7 @@
                         onLoginSuccess(fallbackUser, rememberMe);
                     }, 600);
                 } else {
-                    setErrorMsg('Username atau password salah! (Demo: admin / multibangun123)');
+                    setErrorMsg('Username atau password salah! Silakan periksa kredensial Anda.');
                     setIsLoading(false);
                 }
             };
@@ -2310,7 +2310,7 @@
                                         required
                                         value={username}
                                         onChange={e => setUsername(e.target.value)}
-                                        placeholder="contoh: admin"
+                                        placeholder="Username"
                                         className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm font-medium focus:ring-2 focus:ring-red-500 focus:outline-none transition-all"
                                     />
                                     <svg className="w-5 h-5 text-slate-400 absolute left-3 top-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -2372,12 +2372,6 @@
                                 )}
                             </button>
                         </form>
-
-                        <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 text-center">
-                            <p className="text-[11px] text-slate-400">
-                                Demo Fallback: <strong className="text-slate-600 dark:text-slate-300">admin / multibangun123</strong>
-                            </p>
-                        </div>
                     </div>
                 </div>
             );

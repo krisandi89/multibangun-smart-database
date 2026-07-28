@@ -2174,7 +2174,7 @@
 
 
         // ==================== GAS LOGIN COMPONENT ====================
-        const DEFAULT_GAS_URL = localStorage.getItem('mb_gas_url') || '';
+        const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbzktw-DLqQR4UfmvLygMvxxS2AeQhxf8aSOxlzN0UkTqpIKYY7NmIARq3I7VywYg0Jd8g/exec';
 
         const LoginScreen = ({ onLoginSuccess }) => {
             const [username, setUsername] = useState('');
@@ -2195,7 +2195,7 @@
             };
 
             const handleTestGasConnection = async () => {
-                const activeUrl = gasUrl.trim();
+                const activeUrl = (gasUrl || DEFAULT_GAS_URL).trim();
                 if (!activeUrl) {
                     setTestMsg('❌ Masukkan URL Web App GAS terlebih dahulu!');
                     return;
@@ -2226,7 +2226,7 @@
                 setErrorMsg('');
                 setSuccessMsg('');
 
-                const activeGasUrl = (gasUrl || localStorage.getItem('mb_gas_url') || '').trim();
+                const activeGasUrl = (gasUrl || localStorage.getItem('mb_gas_url') || DEFAULT_GAS_URL).trim();
 
                 // 1. If GAS Web App URL is configured, attempt GAS Authentication
                 if (activeGasUrl) {

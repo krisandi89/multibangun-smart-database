@@ -532,13 +532,6 @@
       "description": "Lapisan kedap air (impermeable liner) untuk kolam limbah, penampungan air, tambak, dan aplikasi landfill.",
       "files": [
         {
-          "name": "Brosur Geomembrane Huitex.pdf",
-          "path": "Assets/02. Geomembrane/01. Brosur/Brosur Geomembrane Huitex.pdf",
-          "type": "brosur",
-          "size": "0.4 MB",
-          "gdriveId": "1oKouvaZyZuPrBZW3ziNZBOynICx5PmTH"
-        },
-        {
           "name": "Spesifikasi HDPE Smooth.pdf",
           "path": "Assets/02. Geomembrane/02. Spesifikasi/Huitex HDPE Geomembrane Smooth Specification.pdf",
           "type": "spesifikasi",

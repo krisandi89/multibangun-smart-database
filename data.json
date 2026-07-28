@@ -59,12 +59,6 @@
       "name": "Drainage System",
       "color": "bg-indigo-600",
       "icon": "folder"
-    },
-    {
-      "id": "monitoring",
-      "name": "InSAR - Satelite Monitoring",
-      "color": "bg-teal-600",
-      "icon": "folder"
     }
   ],
   "fileTypes": [

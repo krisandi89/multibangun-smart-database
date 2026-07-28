@@ -53,6 +53,12 @@
       "name": "Asphalt Reinforcement",
       "icon": "road",
       "color": "bg-rose-600"
+    },
+    {
+      "id": "drainage",
+      "name": "Drainage System",
+      "color": "bg-indigo-600",
+      "icon": "folder"
     }
   ],
   "fileTypes": [

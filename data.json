@@ -516,6 +516,13 @@
           "type": "metode-pemasangan",
           "size": "1.6 MB",
           "gdriveId": ""
+        },
+        {
+          "name": "Brosur InterAx Update_compressed.pdf",
+          "path": "Assets/New/Brosur InterAx Update_compressed.pdf",
+          "type": "brosur",
+          "size": "2.8 MB",
+          "gdriveId": ""
         }
       ]
     },

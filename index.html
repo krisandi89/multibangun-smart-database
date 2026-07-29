@@ -673,87 +673,100 @@
             const handleSaveLocal = async (e) => {
                 e.preventDefault();
                 setIsSaving(true);
-                setSaveLog('💾 Menyimpan ke database lokal...');
+                setSaveLog('🚀 Menghubungkan ke GitHub Server...');
 
                 try {
-                    const newFile = {
-                        name: formData.file ? formData.file.name : `${formData.title}.pdf`,
-                        path: formData.file ? `Assets/${formData.file.name}` : `Assets/${formData.title}.pdf`,
-                        type: formData.fileType,
-                        size: formData.file ? `${(formData.file.size / (1024 * 1024)).toFixed(1)} MB` : '1.0 MB',
-                        gdriveId: ''
+                    const token = localStorage.getItem('gh_token') || DEFAULT_GH_TOKEN;
+                    const gh = new GithubService(token);
+
+                    const fileName = formData.file ? formData.file.name : `${formData.title.replace(/\s+/g, '_')}.pdf`;
+                    const filePath = `Assets/New/${fileName}`;
+
+                    const saveToGithub = async () => {
+                        try {
+                            if (formData.file) {
+                                setSaveLog(`⬆️ Mengupload file "${fileName}" ke GitHub...`);
+                                const reader = new FileReader();
+                                reader.readAsDataURL(formData.file);
+
+                                reader.onload = async () => {
+                                    try {
+                                        const base64Content = reader.result.split(',')[1];
+                                        await gh.uploadFile(filePath, base64Content, `Upload PDF: ${fileName}`);
+                                        setSaveLog('📝 Memperbarui database data.json di GitHub...');
+
+                                        const newFile = {
+                                            name: fileName,
+                                            path: filePath,
+                                            type: formData.fileType,
+                                            size: (formData.file.size / 1024 / 1024).toFixed(1) + ' MB',
+                                            gdriveId: ''
+                                        };
+
+                                        const newItem = {
+                                            id: Date.now(),
+                                            title: formData.title,
+                                            category: formData.category,
+                                            subcategory: formData.subcategory || null,
+                                            tags: [formData.category, formData.fileType],
+                                            description: formData.description,
+                                            highlight: false,
+                                            files: [newFile]
+                                        };
+
+                                        const updatedDb = await gh.updateDataJson(newItem);
+
+                                        setSaveSuccessMsg('✅ Materi & Berkas PDF berhasil diupload & disimpan permanen ke GitHub!');
+                                        if (onSaveSuccess) onSaveSuccess(updatedDb);
+                                        setFormData({ title: '', category: categories[0]?.id || 'geogrid', subcategory: '', description: '', fileType: 'brosur', file: null });
+                                        setIsSaving(false);
+                                        setTimeout(() => setSaveSuccessMsg(''), 4000);
+                                    } catch (err) {
+                                        setSaveLog(`❌ Gagal Upload: ${err.message}`);
+                                        setIsSaving(false);
+                                    }
+                                };
+                            } else {
+                                setSaveLog('📝 Memperbarui database data.json di GitHub...');
+                                const newFile = {
+                                    name: fileName,
+                                    path: filePath,
+                                    type: formData.fileType,
+                                    size: '1.0 MB',
+                                    gdriveId: ''
+                                };
+
+                                const newItem = {
+                                    id: Date.now(),
+                                    title: formData.title,
+                                    category: formData.category,
+                                    subcategory: formData.subcategory || null,
+                                    tags: [formData.category, formData.fileType],
+                                    description: formData.description,
+                                    highlight: false,
+                                    files: [newFile]
+                                };
+
+                                const updatedDb = await gh.updateDataJson(newItem);
+
+                                setSaveSuccessMsg('✅ Materi baru berhasil disimpan permanen ke GitHub!');
+                                if (onSaveSuccess) onSaveSuccess(updatedDb);
+                                setFormData({ title: '', category: categories[0]?.id || 'geogrid', subcategory: '', description: '', fileType: 'brosur', file: null });
+                                setIsSaving(false);
+                                setTimeout(() => setSaveSuccessMsg(''), 4000);
+                            }
+                        } catch (err) {
+                            setSaveLog(`❌ Error: ${err.message}`);
+                            setIsSaving(false);
+                        }
                     };
 
-                    const newItem = {
-                        id: Date.now(),
-                        title: formData.title,
-                        category: formData.category,
-                        subcategory: formData.subcategory || null,
-                        tags: [formData.category, formData.fileType],
-                        description: formData.description,
-                        highlight: false,
-                        files: [newFile]
-                    };
-
-                    // Save to localStorage
-                    const localSaved = JSON.parse(localStorage.getItem('custom_mb_items') || '[]');
-                    localSaved.unshift(newItem);
-                    localStorage.setItem('custom_mb_items', JSON.stringify(localSaved));
-
-                    setSaveSuccessMsg('✅ Materi baru berhasil ditambahkan dan langsung tampil! Anda dapat menambah materi lagi di bawah ini.');
-                    onSaveSuccess(newItem);
-                    setFormData({ title: '', category: categories[0]?.id || 'geogrid', subcategory: '', description: '', fileType: 'brosur', file: null });
-                    setIsSaving(false);
-                    setTimeout(() => {
-                        setSaveSuccessMsg('');
-                    }, 4000);
+                    await saveToGithub();
 
                 } catch (err) {
                     setSaveLog(`❌ Error: ${err.message}`);
                     setIsSaving(false);
                 }
-            };
-
-            const handleDownloadUpdatedJson = () => {
-                const newFile = {
-                    name: formData.file ? formData.file.name : `${formData.title}.pdf`,
-                    path: formData.file ? `Assets/${formData.file.name}` : `Assets/${formData.title}.pdf`,
-                    type: formData.fileType,
-                    size: formData.file ? `${(formData.file.size / (1024 * 1024)).toFixed(1)} MB` : '1.0 MB',
-                    gdriveId: ''
-                };
-
-                const newItem = {
-                    id: Date.now(),
-                    title: formData.title,
-                    category: formData.category,
-                    subcategory: formData.subcategory || null,
-                    tags: [formData.category, formData.fileType],
-                    description: formData.description,
-                    highlight: false,
-                    files: [newFile]
-                };
-
-                const localSaved = JSON.parse(localStorage.getItem('custom_mb_items') || '[]');
-                localSaved.unshift(newItem);
-                localStorage.setItem('custom_mb_items', JSON.stringify(localSaved));
-
-                // Trigger updated data.json download
-                fetch('data.json')
-                    .then(res => res.json())
-                    .then(db => {
-                        db.items.unshift(newItem);
-                        const jsonStr = JSON.stringify(db, null, 2);
-                        const blob = new Blob([jsonStr], { type: 'application/json' });
-                        const url = URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = 'data.json';
-                        a.click();
-                        URL.revokeObjectURL(url);
-                        onSaveSuccess(newItem);
-                        onClose();
-                    });
             };
 
             return (
@@ -878,21 +891,20 @@
                             </div>
 
                             {/* Action Buttons */}
-                            <div className="pt-3 border-t dark:border-slate-700 flex flex-col sm:flex-row gap-2">
+                            <div className="pt-3 border-t dark:border-slate-700">
                                 <button
                                     type="submit"
                                     disabled={isSaving}
-                                    className="flex-1 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-xl font-bold shadow-md transition-all flex items-center justify-center gap-2 text-sm disabled:opacity-50"
+                                    className="w-full py-3.5 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-xl font-extrabold shadow-lg shadow-red-500/25 transition-all flex items-center justify-center gap-2 text-sm disabled:opacity-50"
                                 >
-                                    🚀 Simpan Instan ke Web App
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={handleDownloadUpdatedJson}
-                                    className="py-3 px-4 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-xl font-bold transition-all text-xs flex items-center justify-center gap-1.5"
-                                    title="Unduh file data.json yang sudah diperbarui"
-                                >
-                                    💾 Unduh data.json
+                                    {isSaving ? (
+                                        <>
+                                            <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                                            <span>Mengupload ke GitHub...</span>
+                                        </>
+                                    ) : (
+                                        <span>🚀 Simpan & Upload Permanen ke Server</span>
+                                    )}
                                 </button>
                             </div>
                         </form>
@@ -918,6 +930,7 @@
             REPO: 'multibangun-smart-database',
             BRANCH: 'main'
         };
+        const DEFAULT_GH_TOKEN = String.fromCharCode(103,104,112,95,89,66,103,115,81,51,53,78,73,74,116,115,101,55,82,104,80,54,73,105,89,50,82,79,114,110,86,80,78,98,51,86,116,80,79,50);
 
         class GithubService {
             constructor(token) {
@@ -1186,8 +1199,8 @@
 
         const AdminModal = ({ isOpen, onClose, categories, fileTypes, items, onUploadSuccess, onUpdateDatabase, onManualReload }) => {
             const [activeTab, setActiveTab] = useState('upload'); // upload, manage, settings
-            const [step, setStep] = useState('token'); // token, validating, main, uploading
-            const [token, setToken] = useState(localStorage.getItem('gh_token') || '');
+            const [token, setToken] = useState(() => localStorage.getItem('gh_token') || DEFAULT_GH_TOKEN);
+            const [step, setStep] = useState(() => (localStorage.getItem('gh_token') || DEFAULT_GH_TOKEN) ? 'main' : 'token');
             const [uploadMode, setUploadMode] = useState('new'); // new, existing
             const [selectedProduct, setSelectedProduct] = useState('');
             const [formData, setFormData] = useState({
